@@ -15,25 +15,25 @@ class SQLiteWeightDAO implements WeightDAO {
 	public function setData($rows){
 		try {
 			$this->dbo->beginTransaction();
-			error_log('inside 1');
+			
 			foreach($rows as &$row){
 				
 				$stmt = $this->dbo->prepare("SELECT DATE FROM T_WEIGHT WHERE DATE = CAST(strftime('%s', ?) as integer)");
 				$stmt->execute([$row->date]);
 				$existingRow = $stmt->fetch();
 				$stmt->closeCursor();
-				error_log('inside 2');
+				
 				if(is_array($existingRow) && (sizeof($existingRow) > 0)){
 					
 					# Rows that exist already but have been POSTED again with blank kilos and notes are deleted
 					if(strlen($row->kilograms) == 0 && strlen($row->note) == 0){
-						error_log('inside 3');
+						
 						$stmt = $this->dbo->prepare(
 							"DELETE FROM T_WEIGHT WHERE DATE = CAST(strftime('%s', :date) as integer)");
 							
 						$this->setParamOrNull( $stmt, ':date', $row->date );
 					} else {
-						error_log('inside 4');
+						
 						$stmt = $this->dbo->prepare(
 							"UPDATE T_WEIGHT SET KILOGRAMS = :kilograms, NOTE = :note WHERE DATE = CAST(strftime('%s', :date) as integer)");
 						
@@ -43,7 +43,7 @@ class SQLiteWeightDAO implements WeightDAO {
 					}
 					
 				} else {
-					error_log('inside 5');
+					
 					$stmt = $this->dbo->prepare(
 						"INSERT INTO T_WEIGHT (KILOGRAMS, NOTE, DATE) VALUES(:kilograms, :note, CAST(strftime('%s', :date) as integer))");
 

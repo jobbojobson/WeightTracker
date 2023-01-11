@@ -1,3 +1,5 @@
+--for SQLite 3 run this into a new database called "weight.db" in this directory
+
 create table t_weight(
 	date int primary key,
 	kilograms real not null,

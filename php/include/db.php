@@ -86,7 +86,8 @@ interface WeightDAO {
 		fromDate string - ISO8601 format (YYYY-MM-DD)
 		toDate string - ISO8601 format (YYYY-MM-DD)
 		
-		returns
+		returns array of arrays as expected by Google Charts:
+		[ [ "2023-07-16", 90.5 ] ]
 		
 	*/
 	public function getGoogleChartData($fromDate, $toDate);

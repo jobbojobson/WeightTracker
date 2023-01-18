@@ -46,8 +46,8 @@ function updateChart( ){
 			},
 			hAxis: { 
 				textStyle: { color: '#c8c8c8' }, 
-				title: 'Date',
-				format: 'dd MMM yyyy',
+				format: 'MMMM',
+				title:'',
 				gridlines: {
 					count:4
 				},
@@ -58,7 +58,13 @@ function updateChart( ){
 			},
 			vAxis: { 
 				textStyle: { color: '#c8c8c8' }, 
-				title: 'KG' 
+				title: 'KG',
+				gridLines: {
+					count:4
+				},
+				minorGridLines: {
+					count:4
+				}
 			},
 			width:'800',
 			height:'600'

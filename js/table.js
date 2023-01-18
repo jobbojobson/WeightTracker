@@ -25,6 +25,21 @@ function getData( from, to ){
 	
 	xhr.open('GET', 'php/ajax/table.php?fromDate=' + encodeURIComponent(from.value) + '&toDate=' + encodeURIComponent(to.value));
 	xhr.send();
+	
+	/*
+	Pull the summary data
+	*/
+	(function() {
+		
+		var xhr = new XMLHttpRequest();
+		
+		xhr.addEventListener('load', function( evt ){
+			document.getElementById('summary').innerHTML = evt.target.response;
+		});
+		
+		xhr.open('GET', 'php/ajax/summary.php');
+		xhr.send();
+	})();
 }
 
 /*
@@ -156,21 +171,6 @@ window.addEventListener('beforeunload', function(e){
 	}
 });
 
-
-/*
-	Pull the summary data
-*/
-(function() {
-	
-	var xhr = new XMLHttpRequest();
-	
-	xhr.addEventListener('load', function( evt ){
-		document.getElementById('summary').innerHTML = evt.target.response;
-	});
-	
-	xhr.open('GET', 'php/ajax/summary.php');
-	xhr.send();
-})();
 
 /*
 	Add functionality for "scroll to top" and "scroll to bottom" TODO: might be useless?

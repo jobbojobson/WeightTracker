@@ -15,6 +15,21 @@ function getData( from, to ){
 		
 		if( response.success ){
 			buildTable( response.data );
+			
+			/*
+			Pull the summary data
+			*/
+			(function() {
+				
+				var xhr = new XMLHttpRequest();
+				
+				xhr.addEventListener('load', function( evt ){
+					document.getElementById('summary').innerHTML = evt.target.response;
+				});
+				
+				xhr.open('GET', 'php/ajax/summary.php');
+				xhr.send();
+			})();
 		} else if( response.errors ) {
 			setErrorMessage( response.errors );
 		}
@@ -25,21 +40,6 @@ function getData( from, to ){
 	
 	xhr.open('GET', 'php/ajax/table.php?fromDate=' + encodeURIComponent(from.value) + '&toDate=' + encodeURIComponent(to.value));
 	xhr.send();
-	
-	/*
-	Pull the summary data
-	*/
-	(function() {
-		
-		var xhr = new XMLHttpRequest();
-		
-		xhr.addEventListener('load', function( evt ){
-			document.getElementById('summary').innerHTML = evt.target.response;
-		});
-		
-		xhr.open('GET', 'php/ajax/summary.php');
-		xhr.send();
-	})();
 }
 
 /*

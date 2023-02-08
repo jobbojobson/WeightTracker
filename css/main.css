@@ -17,9 +17,14 @@ h1 {
 }
 
 header {
+	margin-top:1.2em;
 	margin-bottom:0.5em;
 }
 
+section {
+	max-width:500px;
+	margin:auto;
+}
 
 /*      FORM ELEMENTS       */
 fieldset {
@@ -180,11 +185,37 @@ label {
 nav {
 	border-bottom: 1px solid #c8c8c8;
 	height:2em;
+	margin:auto;
+	max-width:500px;
 }
 
 nav a {
 	color:#c8c8c8;
 	margin-right:1em;
-	
 }
 
+/*        DAILY INPUT CONTROLS      */
+.btn.btn-big {
+	font-size:3em;
+}
+
+.big-input {
+	font-size:3em;
+	width:3em;
+}
+
+.big-label {
+	font-size:3em;
+	font-style:italic;
+	margin-top:0.2em;
+	margin-bottom:0.2em;
+}
+
+.frm-narrow {
+	max-width:250px;
+	margin:auto;
+}
+
+.ctrl-daily {
+	text-align:center;
+}

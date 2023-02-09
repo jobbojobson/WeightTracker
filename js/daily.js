@@ -12,7 +12,7 @@ var bUnsavedData = false;
 	xhr.addEventListener('load', function(evt){
 		var response = JSON.parse( evt.target.response );
 		
-		if( response.success ){
+		if( response.data && response.data.length > 0 ){
 			document.getElementById('inpDayValue').value = response.data[0].kilograms;
 		}
 		

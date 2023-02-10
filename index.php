@@ -10,7 +10,7 @@ $_BODYSCRIPTS = 'js/daily.js';
 		<input id="inpDayValue" class="big-input" type="number" step=".1" />
 	</div>
 	<div class="ctrl-daily save-panel">
-		<button id="btnSave" class="btn submit-form btn-big">Save</button>
+		<button id="btnSave" class="btn submit-form btn-big">Save</button></br>
 		<span id="msgSuccess" class="message success fade-text"></span>
 		<span id="msgError" class="message error"></span>
 	</div>

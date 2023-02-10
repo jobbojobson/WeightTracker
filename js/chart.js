@@ -46,7 +46,7 @@ function updateChart( ){
 			},
 			hAxis: { 
 				textStyle: { color: '#c8c8c8' }, 
-				format: 'MMMM',
+				format: 'MMMM dd',
 				title:'',
 				gridlines: {
 					count:4

@@ -93,10 +93,10 @@ interface WeightDAO {
 	public function getGoogleChartData($fromDate, $toDate);
 }
 
-include(__DIR__.'/SQLiteWeightDAO.php');
 
 /* instantiate your DAO. Other code uses $dbo and assumes it fulfills the contract of WeightDAO */
-$dbo = new SQLiteWeightDAO();
+include(__DIR__.'/MariaDBWeightDAO.php'); 
+$dbo = new MariaDBWeightDAO();
 
 
 ?>

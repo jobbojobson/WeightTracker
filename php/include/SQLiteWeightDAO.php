@@ -53,9 +53,10 @@ class SQLiteWeightDAO implements WeightDAO {
 						$this->setParamOrNull( $stmt, ':kilograms', $row->kilograms );
 						$this->setParamOrNull( $stmt, ':note', $row->note );
 						$this->setParamOrNull( $stmt, ':date', $row->date );
+						
+						$stmt->execute();
 					}
 					
-					$stmt->execute();
 				}
 				
 				

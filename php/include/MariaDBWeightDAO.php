@@ -47,18 +47,23 @@ class MariaDBWeightDAO implements WeightDAO {
 						$this->setParamOrNull( $stmt, ':date', $row->date );
 					}
 					
+					$stmt->execute();
+					
 				} else {
 					
-					$stmt = $this->dbo->prepare(
-						"INSERT INTO t_weight (KILOGRAMS, NOTE, DATE) VALUES(:kilograms, :note, :date)");
-					
-					$this->setParamOrNull( $stmt, ':kilograms', $row->kilograms );
-					$this->setParamOrNull( $stmt, ':note', $row->note );
-					$this->setParamOrNull( $stmt, ':date', $row->date );
-					
+					if(strlen($row->kilograms) > 0){
+						$stmt = $this->dbo->prepare(
+							"INSERT INTO t_weight (KILOGRAMS, NOTE, DATE) VALUES(:kilograms, :note, :date)");
+						
+						$this->setParamOrNull( $stmt, ':kilograms', $row->kilograms );
+						$this->setParamOrNull( $stmt, ':note', $row->note );
+						$this->setParamOrNull( $stmt, ':date', $row->date );
+						
+						$stmt->execute();
+					}
 				}
 				
-				$stmt->execute();
+				
 			}
 			
 			$this->dbo->commit();

@@ -42,17 +42,23 @@ class SQLiteWeightDAO implements WeightDAO {
 						$this->setParamOrNull( $stmt, ':date', $row->date );
 					}
 					
+					$stmt->execute();
+					
 				} else {
 					
-					$stmt = $this->dbo->prepare(
-						"INSERT INTO T_WEIGHT (KILOGRAMS, NOTE, DATE) VALUES(:kilograms, :note, CAST(strftime('%s', :date) as integer))");
+					if(strlen($row->kilograms) > 0) {
+						$stmt = $this->dbo->prepare(
+							"INSERT INTO T_WEIGHT (KILOGRAMS, NOTE, DATE) VALUES(:kilograms, :note, CAST(strftime('%s', :date) as integer))");
 
-					$this->setParamOrNull( $stmt, ':kilograms', $row->kilograms );
-					$this->setParamOrNull( $stmt, ':note', $row->note );
-					$this->setParamOrNull( $stmt, ':date', $row->date );
+						$this->setParamOrNull( $stmt, ':kilograms', $row->kilograms );
+						$this->setParamOrNull( $stmt, ':note', $row->note );
+						$this->setParamOrNull( $stmt, ':date', $row->date );
+					}
+					
+					$stmt->execute();
 				}
 				
-				$stmt->execute();
+				
 			} #next row
 			
 			$this->dbo->commit();

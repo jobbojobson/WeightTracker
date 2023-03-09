@@ -70,7 +70,7 @@ function saveData(){
 	
 	var payload = [];
 	
-	document.querySelectorAll('.dirty-row').forEach(function( el ){
+	document.querySelectorAll('.table-warning').forEach(function( el ){
 		
 		var dirtyRow = {
 			date : el.querySelector('td:nth-Child(1)').getAttribute('data-date'),
@@ -130,7 +130,7 @@ function buildTable( data ){
 	
 	document.querySelectorAll('#tblData input').forEach(function( input ){
 		input.addEventListener('change', function( evt ){
-			evt.target.parentElement.parentElement.classList.add('dirty-row');
+			evt.target.parentElement.parentElement.classList.add('table-warning');
 			bUnsavedData = true;
 		});
 	});

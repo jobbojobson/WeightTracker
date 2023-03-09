@@ -1,0 +1,39 @@
+/*      GENERAL        */
+body {
+	/* --bs-secondary-color didn't work */
+	background-color: #343a40;
+	/* --bs-secondary-bg didn't work */
+	color:rgba(173, 181, 189, 0.75);
+}
+
+.navbar a, .navbar label {
+	/* --bs-tertiary-color didn't work */
+	color:rgba(173, 181, 189, 0.75);
+}
+
+.navbar .navbar-nav .nav-link:hover {
+	/* --bs-tertiary-bg didn't work */
+	color:rgba(173, 181, 189, 0.5);
+}
+
+.navbar-brand {
+	pointer-events: none;
+}
+
+.table td {
+	color:rgba(173, 181, 189, 0.75);
+}
+
+#scrAllTable {
+	max-height:600px;
+	overflow:auto;
+}
+
+.sticky-header { 
+	position:sticky; 
+	top:0; 
+}
+
+.date-weekend {
+	background-color:gray;
+}

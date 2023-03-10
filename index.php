@@ -14,9 +14,7 @@ $_BODYSCRIPTS = 'js/daily.js';
 	
 
 	<button id="btnSave" type="button" class="btn btn-primary">Save</button>
-	<span id="msgSuccess" class="message success fade-text"></span>
-	<span id="msgError" class="message error"></span>
-
+	<?php require(__DIR__.'/php/include/ui/ctrl/msgPanel.php'); ?>
 
 </div>
 
@@ -24,6 +22,6 @@ $_BODYSCRIPTS = 'js/daily.js';
 $_PAGECONTENT = ob_get_contents();
 ob_end_clean();
 
-include('php/include/master.php');
+include('php/include/ui/master.php');
 
 ?>

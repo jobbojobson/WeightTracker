@@ -29,11 +29,71 @@ body {
 	overflow:auto;
 }
 
-.sticky-header { 
+.sticky-header th { 
 	position:sticky; 
 	top:0; 
 }
 
-.date-weekend {
-	background-color:gray;
+/*        MESSAGES          */
+.fade-text {
+	animation: fadeOut 5s 1;
+	-webkit-animation: fadeOut 5s 1;
+	animation-fill-mode: forwards;
+	
+	animation-delay:2s;
+	-webkit-animation-delay:1s; /* Safari and Chrome */
+    -webkit-animation-fill-mode: forwards;
 }
+
+@keyframes fadeOut {
+  0% { opacity:1; }
+  100% { opacity:0; }
+}
+
+@-webkit-keyframes fadeOut {
+  0% { opacity:1; }
+  100% { opacity:0; }
+}
+
+/*         TABLE          */
+#scrollControls {
+	cursor:pointer;
+	font-size:2em;
+}
+
+.table-controls input, .chart-controls input {
+	width:10em;
+}
+
+.table {
+	border-collapse:separate;
+	border-spacing:0;
+}
+
+.table th, .table td {
+	text-align:center;
+	border:1px solid #585858;
+}
+
+.table.ajax-loading {
+	opacity:0.2;
+}
+
+.date-col {
+	min-width:6em;
+}
+
+.num-col-small {
+	max-width:4.5em;
+	min-width:4em;
+}
+
+.text-col-wide {
+	min-width:10em;
+}
+
+.num-col-small > input, .text-col-wide > input {
+	display:block;
+	width:100%
+}
+

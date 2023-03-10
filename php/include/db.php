@@ -95,7 +95,7 @@ interface WeightDAO {
 
 
 /* instantiate your DAO. Other code uses $dbo and assumes it fulfills the contract of WeightDAO */
-include(__DIR__.'/MariaDBWeightDAO.php'); 
+include(__DIR__.'/dao/MariaDBWeightDAO.php'); 
 $dbo = new MariaDBWeightDAO();
 
 

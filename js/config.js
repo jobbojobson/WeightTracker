@@ -1,6 +1,9 @@
 //
 var bDirty = false;
 
+/*
+	Save button click handler
+*/
 document.getElementById('btnSave').addEventListener('click', function( evt ){
 	evt.preventDefault();
 	var xhr = new XMLHttpRequest();
@@ -20,6 +23,9 @@ document.getElementById('btnSave').addEventListener('click', function( evt ){
 	
 });
 
+/*
+	Check for unsaved data
+*/
 window.onload = function(){
 	window.addEventListener('beforeunload', function(evt){
 		if(bDirty){
@@ -30,6 +36,9 @@ window.onload = function(){
 	});
 };
 
+/*
+	Add all change handlers
+*/
 (function(){
 	var formControls = document.querySelectorAll('input, select');
 	
@@ -39,6 +48,9 @@ window.onload = function(){
 })();
 
 
+/*
+	Load the current data
+*/
 (function(){
 	
 	var xhr = new XMLHttpRequest();

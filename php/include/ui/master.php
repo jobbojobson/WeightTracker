@@ -15,7 +15,6 @@ header("Set-Cookie: SameSite=None; Secure");
 		<link rel="stylesheet" href="css/main-bs.css" />
 		<link rel="icon" href="img/weight-icon-original.svg" type="image/svg+xml"/>
 		
-		<!--<script src="https://kit.fontawesome.com/a466a965c8.js" crossorigin="anonymous"></script>-->
 		<script src="js/master.js"></script>
 		
 		<?php

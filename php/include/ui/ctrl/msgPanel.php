@@ -1,0 +1,5 @@
+
+<div class="d-inline-block">
+	<span id="msgSuccess" class="message text-success fade-text"></span>
+	<span id="msgError" class="message text-danger"></span>
+</div>

@@ -4,6 +4,11 @@ var bUnsavedData = false;
 
 //takes html input elements of type="date"
 function getData( from, to ){
+	
+	if(!from.value || !to.value){
+		return;
+	}
+	
 	var xhr = new XMLHttpRequest();
 	
 	document.getElementById('btnSave').disabled = true;
@@ -11,27 +16,29 @@ function getData( from, to ){
 	
 	xhr.addEventListener('load', function( evt ){
 		
-		var response = JSON.parse( evt.target.response );
-		
-		if( response.success ){
-			buildTable( response.data );
+		if( evt.target.response ){
+			var response = JSON.parse( evt.target.response );
 			
-			/*
-			Pull the summary data
-			*/
-			(function() {
+			if( response.success ){
+				buildTable( response.data );
 				
-				var xhr = new XMLHttpRequest();
-				
-				xhr.addEventListener('load', function( evt ){
-					document.getElementById('summary').innerHTML = evt.target.response;
-				});
-				
-				xhr.open('GET', 'php/ajax/summary.php');
-				xhr.send();
-			})();
-		} else if( response.errors ) {
-			setErrorMessage( response.errors );
+				/*
+				Pull the summary data
+				*/
+				(function() {
+					
+					var xhr = new XMLHttpRequest();
+					
+					xhr.addEventListener('load', function( evt ){
+						document.getElementById('summary').innerHTML = evt.target.response;
+					});
+					
+					xhr.open('GET', 'php/ajax/summary.php');
+					xhr.send();
+				})();
+			} else if( response.errors ) {
+				setErrorMessage( response.errors );
+			}
 		}
 		
 		document.getElementById('btnSave').disabled = false;
@@ -118,13 +125,13 @@ function buildTable( data ){
 		
 		tbody.innerHTML += 
 			'<tr>' +
-				'<td class="date-col' + ((date.getDay() == 6 || date.getDay() == 0) ? ' date-weekend" ' : '" ') + 
+				'<td class="date-col' + ((date.getDay() == 6 || date.getDay() == 0) ? ' bg-secondary" ' : '" ') + 
 					'data-date="'+ (date.toISOString().substring(0, 10)) + '">'+ date.toLocaleDateString() + '</td>' +
 				'<td class="num-col-small"><input type="number" step=".1" value="'+ (row.kilograms ? row.kilograms.toFixed(1) : '') +'"/></td>' +
 				'<td class="num-col-small">'+ (row.last_week_average ? row.last_week_average.toFixed(2) : '') + '</td>' +
 				'<td class="num-col-small">'+ (row.pounds ? row.pounds.toFixed(2) : '') + '</td>' +
 				'<td class="num-col-small">'+ (row.stone ? row.stone : '') + '</td>' +
-				'<td class="wide-col"><input type="text" value="'+ (row.note == null ? '' : row.note) + '" /></td>' +
+				'<td class="text-col-wide"><input type="text" value="'+ (row.note == null ? '' : row.note) + '" /></td>' +
 			'</tr>';
 	}
 	
@@ -176,23 +183,16 @@ window.addEventListener('beforeunload', function(e){
 	Add functionality for "scroll to top" and "scroll to bottom" TODO: might be useless?
 */
 (function(){
-	var arScrollControls = document.getElementsByClassName('scrollControls');
+	var el = document.getElementById('scrollControls');
+	var tbl = document.getElementById('scrAllTable');
 	
-	for(var i = 0; i < arScrollControls.length; i++){
-		var div = arScrollControls[i];
-		var btnUp = div.firstElementChild;
-		var btnDown = div.firstElementChild.nextElementSibling;
-		var scrl = div.nextElementSibling;
-		
-		btnUp.addEventListener('click', function( evt ){
-			scrl.scrollTop = 0;
-		});
-		
-		btnDown.addEventListener('click', function( evt ){
-			scrl.scrollTop = scrl.scrollHeight;
-		});
-		
-	}
+	el.firstElementChild.addEventListener('click', function(){
+		tbl.scrollTop = 0;
+	});
+	
+	el.firstElementChild.nextElementSibling.addEventListener('click', function(){
+		tbl.scrollTop = tbl.scrollHeight;
+	});
 	
 })();
 

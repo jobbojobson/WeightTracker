@@ -127,11 +127,11 @@ function buildTable( data ){
 			'<tr>' +
 				'<td class="date-col' + ((date.getDay() == 6 || date.getDay() == 0) ? ' bg-secondary" ' : '" ') + 
 					'data-date="'+ (date.toISOString().substring(0, 10)) + '">'+ date.toLocaleDateString() + '</td>' +
-				'<td class="num-col-small"><input type="number" step=".1" value="'+ (row.kilograms ? row.kilograms.toFixed(1) : '') +'"/></td>' +
+				'<td class="num-col-small"><input class="form-control" type="number" step=".1" value="'+ (row.kilograms ? row.kilograms.toFixed(1) : '') +'"/></td>' +
 				'<td class="num-col-small">'+ (row.last_week_average ? row.last_week_average.toFixed(2) : '') + '</td>' +
 				'<td class="num-col-small">'+ (row.pounds ? row.pounds.toFixed(2) : '') + '</td>' +
 				'<td class="num-col-small">'+ (row.stone ? row.stone : '') + '</td>' +
-				'<td class="text-col-wide"><input type="text" value="'+ (row.note == null ? '' : row.note) + '" /></td>' +
+				'<td class="text-col-wide"><input class="form-control" type="text" value="'+ (row.note == null ? '' : row.note) + '" /></td>' +
 			'</tr>';
 	}
 	

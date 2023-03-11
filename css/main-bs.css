@@ -84,8 +84,8 @@ body {
 }
 
 .num-col-small {
-	max-width:4.5em;
-	min-width:4em;
+	max-width:100px;
+	min-width:80px;
 }
 
 .text-col-wide {

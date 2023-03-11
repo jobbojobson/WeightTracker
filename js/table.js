@@ -20,6 +20,7 @@ function getData( from, to ){
 			var response = JSON.parse( evt.target.response );
 			
 			if( response.success ){
+				
 				buildTable( response.data );
 				
 				/*
@@ -36,6 +37,7 @@ function getData( from, to ){
 					xhr.open('GET', 'php/ajax/summary.php');
 					xhr.send();
 				})();
+				
 			} else if( response.errors ) {
 				setErrorMessage( response.errors );
 			}
@@ -66,7 +68,7 @@ function saveData(){
 		if( response.success ){
 			setSuccessMessage( "Saved" );
 			bUnsavedData = false;
-			getData(document.getElementById('inpFromDate'), document.getElementById('inpToDate'));
+			getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
 		} else if( response.errors) {
 			setErrorMessage( response.errors );
 		}
@@ -160,7 +162,7 @@ document.getElementById('btnFetch').addEventListener('click', function( evt ){
 	
 	clearErrors();
 	
-	getData(document.getElementById('inpFromDate'), document.getElementById('inpToDate'));
+	getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
 	
 });
 
@@ -168,6 +170,19 @@ document.getElementById('btnFetch').addEventListener('click', function( evt ){
 	Save button event handler
 */
 document.getElementById('btnSave').addEventListener('click', saveData);
+
+
+/*
+	Export button handler
+*/
+document.getElementById('btnExport').addEventListener('click', function(){
+	
+	window.location = 
+		'php/ajax/table.php' +
+		'?fromDate=' + encodeURIComponent(document.getElementById('inpFromDate').value) + 
+		'&toDate=' + encodeURIComponent(document.getElementById('inpToDate').value) + 
+		'&export';
+});
 
 /*
 	Window handler for unsaved data
@@ -203,6 +218,4 @@ var fromDate = document.getElementById('inpFromDate');
 fromDate.value = (new Date(fromDate.valueAsDate.getTime() - (28 * 24 * 60 * 60 * 1000)).toISOString().substr(0, 10));
 var toDate = document.getElementById('inpToDate');
 
-
 getData( fromDate, toDate );
-

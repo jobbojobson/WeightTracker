@@ -1,10 +1,7 @@
 <?php
-
-
 header('Content-Type:application/json; charset=UTF-8');
 
 require(__DIR__.'/../include/utils.php');
-
 
 
 switch($_SERVER['REQUEST_METHOD']){
@@ -50,14 +47,18 @@ function get(){
 		
 		try {
 			
-			echo json_encode([ 'success' => true, 'data' => $dbo->getData( $fromDate, $toDate ) ]);
+			$data = $dbo->getData( $fromDate, $toDate );
 			
+			if(isset($_GET['export']) && sizeof($data) > 0){
+				createCSV( $data );
+			} else {
+				echo json_encode([ 'success' => true, 'data' => $data ]);
+			}
 		} catch(PDOException $e) {
 			echo json_encode(['errors' => [ $e->getMessage() ]]);
 		}
 		
 	}
-	
 	
 }
 
@@ -84,6 +85,24 @@ function post(){
 		
 	}
 	
+}
+
+
+function createCSV( $data ){
+	
+	ob_end_clean();
+	$headers = array_keys($data[0]);
+	$output = fopen( 'php://memory', 'w' );
+	fputcsv($output, $headers);
+	
+	foreach($data as $row){
+		fputcsv($output, array_values($row), ',');
+	}
+	
+	fseek($output, 0);
+	header('Content-Type: text/csv; charset=utf-8');
+	header('Content-Disposition: attachment; filename=weight_export.csv');
+	fpassthru($output);
 }
 
 ?>

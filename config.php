@@ -39,7 +39,7 @@ ob_start();
 	</div>	
 	<div class="save-panel">
 		<button id="btnSave" class="btn btn-primary">Save</button>
-		<?php require(__DIR__.'/php/include/ui/ctrl/msgPanel.php'); ?>
+		<?php require(__DIR__.'/php/include/ui/ctrl/msgPanel.html'); ?>
 	</div>
 	
 </form>

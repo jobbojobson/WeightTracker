@@ -3,23 +3,25 @@ ob_start();
 $_BODYSCRIPTS = 'js/daily.js';
 ?>
 
-<div class="frm-narrow">
+<div>
+	
 	<h2 class="ctrl-daily big-label" data-date="<?php echo date("Y-m-d"); ?>" id="spnDate"></h2>
+	
+	
+	<div class="form-group mb-3 w-25">
+		<input id="inpDayValue" class="form-control" type="number" step=".1" placeholder="Kilograms"/>
+	</div>
+	
 
-	<div class="ctrl-daily">
-		<input id="inpDayValue" class="big-input" type="number" step=".1" />
-	</div>
-	<div class="ctrl-daily save-panel">
-		<button id="btnSave" class="btn submit-form btn-big">Save</button></br>
-		<span id="msgSuccess" class="message success fade-text"></span>
-		<span id="msgError" class="message error"></span>
-	</div>
+	<button id="btnSave" type="button" class="btn btn-primary">Save</button>
+	<?php require(__DIR__.'/php/include/ui/ctrl/msgPanel.php'); ?>
+
 </div>
 
 <?php
 $_PAGECONTENT = ob_get_contents();
 ob_end_clean();
 
-include('php/include/master.php');
+include('php/include/ui/master.php');
 
 ?>

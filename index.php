@@ -14,7 +14,7 @@ $_BODYSCRIPTS = 'js/daily.js';
 	
 
 	<button id="btnSave" type="button" class="btn btn-primary">Save</button>
-	<?php require(__DIR__.'/php/include/ui/ctrl/msgPanel.php'); ?>
+	<?php require(__DIR__.'/php/include/ui/ctrl/msgPanel.html'); ?>
 
 </div>
 

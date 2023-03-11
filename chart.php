@@ -6,7 +6,7 @@ $_BODYSCRIPTS = 'js/chart.js';
 
 <div class="chart-controls row align-items-center g-3 mb-2">
 	
-	<?php require(__DIR__.'/php/include/ui/ctrl/dateRangeFetch.php'); ?>
+	<?php require(__DIR__.'/php/include/ui/ctrl/dateRangeFetch.html'); ?>
 </div>
 
 <div id="lineChart" ></div>

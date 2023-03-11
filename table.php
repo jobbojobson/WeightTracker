@@ -11,7 +11,7 @@ $_BODYSCRIPTS = 'js/table.js';
 		</span>
 	</div>
 	
-	<?php require(__DIR__.'/php/include/ui/ctrl/dateRangeFetch.php'); ?>
+	<?php require(__DIR__.'/php/include/ui/ctrl/dateRangeFetch.html'); ?>
 </div>
 
 <div id="scrAllTable" class="table-responsive">
@@ -33,7 +33,11 @@ $_BODYSCRIPTS = 'js/table.js';
 
 <div class="save-panel form-row mt-2 mb-2">
 	<button id="btnSave" class="btn btn-primary submit-form">Save</button>
-	<?php require(__DIR__.'/php/include/ui/ctrl/msgPanel.php'); ?>
+	<?php require(__DIR__.'/php/include/ui/ctrl/msgPanel.html'); ?>
+	
+	<button id="btnExport" class="btn btn-primary float-end">
+		<i class="bi bi-filetype-csv"></i>&nbsp;Export
+	</button>
 </div>
 
 <div id="summary">

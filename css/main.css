@@ -5,10 +5,6 @@ body {
 	color:#c8c8c8;
 }
 
-h1 {
-	font-size:1.75em;
-}
-
 .div-col {
 	float:left;
 	width:500px;
@@ -48,21 +44,8 @@ label {
 
 
 /*         BUTTONS       */
-.btn {
-	color:#ffffff;
-	cursor:pointer;
-	background-color:#4caf50;
-}
 
-.btn.submit-form {
-	display:inline-block;
-	height:2em;
-	border:2px;
-	border-radius:4px 4px 4px 4px;
-	padding:0 1em 0 1em;
-}
-
-:disabled {
+:disabled { /* make this work with bootstrap disabled buttons */
 	cursor:not-allowed;
 }
 
@@ -101,15 +84,11 @@ label {
   100% { opacity:0; }
 }
 
-
-
-
 /*          TABLES        */
 .dataTable {
 	font-size:0.7em;
 	border-collapse:separate;
 	border-spacing: 0;
-	/*margin-bottom:1.5em;*/
 }
 
 .dataTable > thead > tr {
@@ -194,28 +173,3 @@ nav a {
 	margin-right:1em;
 }
 
-/*        DAILY INPUT CONTROLS      */
-.btn.btn-big {
-	font-size:3em;
-}
-
-.big-input {
-	font-size:3em;
-	width:3em;
-}
-
-.big-label {
-	font-size:3em;
-	font-style:italic;
-	margin-top:0.2em;
-	margin-bottom:0.2em;
-}
-
-.frm-narrow {
-	max-width:250px;
-	margin:auto;
-}
-
-.ctrl-daily {
-	text-align:center;
-}

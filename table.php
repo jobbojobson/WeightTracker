@@ -31,7 +31,7 @@ $_BODYSCRIPTS = 'js/table.js';
 	</table>
 </div>
 
-<div class="save-panel form-row mt-2 mb-2">
+<div class="form-row mt-2 mb-2">
 	<button id="btnSave" class="btn btn-primary submit-form">Save</button>
 	<?php require(__DIR__.'/php/include/ui/ctrl/msgPanel.html'); ?>
 	

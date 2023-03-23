@@ -32,7 +32,7 @@ header("Set-Cookie: SameSite=None; Secure");
 	<body class="container">
 	
 		<header>
-			<nav class="navbar navbar-expand-md">
+			<nav class="navbar navbar-expand-md navbar-dark">
 				<div class="container-fluid">
 					<label class="navbar-brand" >Weight Tracker</label>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,7 +49,7 @@ header("Set-Cookie: SameSite=None; Secure");
 							<li class="nav-item">
 								<a class="nav-link" href="chart.php"><i class="bi bi-graph-down"></i> Chart</a>
 							</li>
-							</li class="nav-item">
+							<li class="nav-item">
 								<a class="nav-link" href="config.php"><i class="bi bi-gear-fill"></i> Configuration</a>
 							</li>
 						</ul>

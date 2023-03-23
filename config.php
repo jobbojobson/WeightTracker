@@ -6,7 +6,7 @@ ob_start();
 	
 	<div class="form-group mb-2">
 		<label for="selGender" class="form-label">Gender</label><br/>
-		<select name="gender" id="selGender" class="form-control">
+		<select name="gender" id="selGender" class="form-select">
 			<option value="M">Male</option>
 			<option value="F">Female</option>
 		</select>
@@ -21,7 +21,7 @@ ob_start();
 	</div>
 	<div class="form-group mb-2">
 		<label for="selAct" class="form-label">Activity Level</label><br/>
-		<select name="activity" id="selAct" class="form-control">
+		<select name="activity" id="selAct" class="form-select">
 			<option value="1.2">Little to no exercise</option>
 			<option value="1.375">Light exercise</option>
 			<option value="1.55">Moderate exercise</option>

@@ -24,8 +24,6 @@ var bUnsavedData = false;
 	xhr.send();
 })()
 
-
-
 document.getElementById('inpDayValue').addEventListener('change', function(evt){
 	bUnsavedData = true;
 });
@@ -60,6 +58,14 @@ document.getElementById('btnSave').addEventListener('click', function(evt){
 	xhr.open('POST', 'php/ajax/table.php');
 	xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 	xhr.send( JSON.stringify(payload) );
+});
+
+document.getElementById('inpDayValue').addEventListener('keyup', function(evt){
+	if(evt.key === 'Enter'){
+		var e = document.getElementById('btnSave');
+		if(typeof e.click == 'function')
+			e.click();
+	}
 });
 
 window.addEventListener('beforeunload', function(e){

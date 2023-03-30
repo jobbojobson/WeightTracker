@@ -1,16 +1,19 @@
 <?php 
 header('Content-Type:application/json; charset=UTF-8');
 
+require(__DIR__.'/../include/utils.php');
+
 if( $_SERVER['REQUEST_METHOD'] == 'GET' ){
 
 	require(__DIR__.'/../include/db.php');
-
-	echo json_encode($dbo->getUser(), JSON_FORCE_OBJECT);
+	
+	$data = $dbo->getUser();
+	#var_dump($data);
+	sanitizeOutput( $data );
+	echo json_encode( $data, JSON_FORCE_OBJECT);
 }
 
 if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
-	
-	require(__DIR__.'/../include/utils.php');
 	
 	$errors = [];
 	

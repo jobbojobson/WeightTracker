@@ -52,6 +52,8 @@ function get(){
 			if(isset($_GET['export']) && sizeof($data) > 0){
 				createCSV( $data );
 			} else {
+				#var_dump($data);
+				sanitizeOutput( $data );
 				echo json_encode([ 'success' => true, 'data' => $data ]);
 			}
 		} catch(PDOException $e) {

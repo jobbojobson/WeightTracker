@@ -35,4 +35,21 @@ function validatePeriod( $fromDate, $toDate ){
 	}
 }
 
+/*
+  
+*/
+function sanitizeOutput( &$data ){
+	
+	array_walk_recursive($data, function(&$value, $key){
+		$value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+	});
+	
+	#foreach($data as &$row){
+		
+		
+		
+	#}
+	
+}
+
 ?>

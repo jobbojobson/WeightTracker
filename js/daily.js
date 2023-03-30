@@ -13,7 +13,7 @@ var bUnsavedData = false;
 		var response = JSON.parse( evt.target.response );
 		
 		if( response.data && response.data.length > 0 ){
-			document.getElementById('inpDayValue').value = response.data[0].kilograms.toFixed(1);
+			document.getElementById('inpDayValue').value = Number(response.data[0].kilograms).toFixed(1);
 		}
 		
 		document.getElementById('btnSave').disabled = false;

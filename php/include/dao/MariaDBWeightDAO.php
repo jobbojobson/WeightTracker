@@ -1,13 +1,13 @@
 <?php
+include(__DIR__.'/DataAccessObject.php'); 
 /*
 	Example data access object for MariaDB
 */
-class MariaDBWeightDAO implements WeightDAO {
+class MariaDBWeightDAO extends DataAccessObject {
 	
-	private $dbo;
-	
-	function __construct(){
-		$this->dbo = new PDO('mysql:host=localhost;dbname=WeightTracker', 'WeightTracker', 'WeightTracker');
+	function __construct($dsn, $username, $password){
+		parent::__construct($dsn, $username, $password);
+		
 		$this->dbo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->dbo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 		/* 
@@ -193,15 +193,6 @@ class MariaDBWeightDAO implements WeightDAO {
 		
 		$stmt->closeCursor();
 		return $output;
-	}
-
-	/* utility function to set a parameter in the given statement. If the parameter is of length zero, it is set to null */
-	private function setParamOrNull( &$stmt, $sParam, $val, $type = PDO::PARAM_STR ){
-		if(strlen($val) > 0){
-			return $stmt->bindValue( $sParam, $val, $type );		
-		} else {
-			return $stmt->bindValue( $sParam, null ,PDO::PARAM_NULL );
-		}
 	}
 
 }

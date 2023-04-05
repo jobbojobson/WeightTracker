@@ -1,7 +1,4 @@
-
-<?php
-/* IMPORTANT: This file should define a variable, $dbo, that fulfills the contract of the WeightDAO interface */
-
+<?php 
 
 /* implement this interface to create Data Access Objects for other database technologies */
 interface WeightDAO {
@@ -92,11 +89,5 @@ interface WeightDAO {
 	*/
 	public function getGoogleChartData($fromDate, $toDate);
 }
-
-
-/* instantiate your DAO. Other code uses $dbo and assumes it fulfills the contract of WeightDAO */
-include(__DIR__.'/dao/MariaDBWeightDAO.php'); 
-$dbo = new MariaDBWeightDAO();
-
 
 ?>

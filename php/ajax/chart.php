@@ -1,32 +1,36 @@
 <?php 
 header('Content-Type:application/json; charset=UTF-8');
 
-require(__DIR__.'/../include/utils.php');
+if( $_SERVER['REQUEST_METHOD'] == 'POST' ) exit();
 
 $fromDate = null;
 $toDate = null;
 
+require(__DIR__.'/../include/time/Day.php');
+
 if(isset($_GET['fromDate']) && !empty($_GET['fromDate'])) {
 	
-	$fromDate = trim($_GET['fromDate']);
-	if( ! validateDate($fromDate)){
+	try {
+		$fromDate = new Day(trim($_GET['fromDate']));
+	} catch(Exception $e) {
 		exit();
 	}
 }
 
 if(isset($_GET['toDate']) && !empty($_GET['toDate'])) {
 	
-	$toDate = trim($_GET['toDate']);
-	if( ! validateDate($toDate)){
+	try {
+		$toDate = new Day(trim($_GET['toDate']));
+	} catch(Exception $e) {
 		exit();
 	}
 }
 
-require(__DIR__.'/../include/db.php');
+require(__DIR__.'/../include/db/WeightDatabase.php');
 
 try {
 	
-	echo json_encode([ 'success' => true, 'data' => $dbo->getGoogleChartData( $fromDate, $toDate ) ]);
+	echo json_encode([ 'success' => true, 'data' => (new WeightDatabase())->getGoogleChartData( $fromDate->__toString(), $toDate->__toString() ) ]);
 	
 } catch(PDOException $e){
 	echo json_encode([ 'errors' => [ $e->getMessage() ] ]);

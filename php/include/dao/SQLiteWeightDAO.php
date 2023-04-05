@@ -1,12 +1,12 @@
 <?php
+include(__DIR__.'/DataAccessObject.php'); 
 
 /* Data Access Object for SQLite 3 */
-class SQLiteWeightDAO implements WeightDAO {
+class SQLiteWeightDAO extends DataAccessObject {
 	
-	private $dbo;
-	
-	function __construct(){
-		$this->dbo = new PDO('sqlite:'.__DIR__.'/../../db/weight.db');
+	function __construct($dsn){
+		parent::__construct($dsn, null, null);
+		#$this->dbo = new PDO('sqlite:'.__DIR__.'/../../db/weight.db');
 		$this->dbo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->dbo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 		$this->dbo->exec('PRAGMA foreign_keys = ON');
@@ -176,16 +176,6 @@ class SQLiteWeightDAO implements WeightDAO {
 		$stmt->closeCursor();
 		return $output;
 	}
-	
-	/* utility function to set a parameter in the given statement. If the parameter is of length zero, it is set to null */
-	private function setParamOrNull( &$stmt, $sParam, $val, $type = PDO::PARAM_STR ){
-		if(strlen($val) > 0){
-			return $stmt->bindValue( $sParam, $val, $type );		
-		} else {
-			return $stmt->bindValue( $sParam, null ,PDO::PARAM_NULL );
-		}
-	}
-
 	
 }
 ?>

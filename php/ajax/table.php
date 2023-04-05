@@ -1,9 +1,6 @@
 <?php
 header('Content-Type:application/json; charset=UTF-8');
 
-require(__DIR__.'/../include/utils.php');
-
-
 switch($_SERVER['REQUEST_METHOD']){
 	case 'GET': 
 		get();
@@ -13,47 +10,46 @@ switch($_SERVER['REQUEST_METHOD']){
 		break;
 }
 
-
-
 function get(){
-	
 	
 	if(isset($_GET['fromDate']) && !empty($_GET['fromDate']) && isset($_GET['toDate']) && !empty($_GET['toDate'])){
 		
 		$errors = [];
 		
+		require(__DIR__.'/../include/time/Day.php');
+		require(__DIR__.'/../include/time/Period.php');
+		
 		$fromDate = trim($_GET['fromDate']);
 		$toDate = trim($_GET['toDate']);
 		
-		if( ! validateDate($fromDate) ){
-			array_push($errors, 'Invalid From Date');
+		try {
+			$fromDate = new Day($fromDate);
+			$toDate = new Day($toDate);
+			$period = new Period($fromDate, $toDate);
+		} catch(Exception $e) {
+			array_push($errors, $e->getMessage());
 		}
 		
-		if( ! validateDate($toDate) ){
-			array_push($errors, 'Invalid To Date');
-		}
-		
-		#test that from date is before to date
-		if( ! validatePeriod($fromDate, $toDate) ){
-			array_push($errors, 'From date must be before To date');
-		}
-
 		if(sizeof($errors) > 0){
 			echo json_encode([ 'errors' => $errors ]);
 			exit();
 		}
 		
-		require(__DIR__.'/../include/db.php');
+		require(__DIR__.'/../include/db/WeightDatabase.php');
 		
 		try {
 			
-			$data = $dbo->getData( $fromDate, $toDate );
+			$data = (new WeightDatabase())->getData( $fromDate->__toString(), $toDate->__toString() );
 			
 			if(isset($_GET['export']) && sizeof($data) > 0){
 				createCSV( $data );
 			} else {
 				#var_dump($data);
-				sanitizeOutput( $data );
+				
+				array_walk_recursive($data, function(&$value, $key){
+					$value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+				});
+				
 				echo json_encode([ 'success' => true, 'data' => $data ]);
 			}
 		} catch(PDOException $e) {
@@ -75,11 +71,13 @@ function post(){
 		exit();
 	}
 	
-	require(__DIR__.'/../include/db.php');
+	# test that the posted data is actually a weight array from our front end
+	
+	require(__DIR__.'/../include/db/WeightDatabase.php');
 	
 	try {
 		
-		$dbo->setData($data);
+		(new WeightDatabase())->setData($data);
 		echo json_encode([ 'success' => true ]);
 		
 	} catch(PDOException $e) {

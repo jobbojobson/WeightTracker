@@ -1,15 +1,17 @@
 <?php 
 header('Content-Type:application/json; charset=UTF-8');
 
-require(__DIR__.'/../include/utils.php');
 
 if( $_SERVER['REQUEST_METHOD'] == 'GET' ){
 
-	require(__DIR__.'/../include/db.php');
+	require(__DIR__.'/../include/db/WeightDatabase.php');
 	
-	$data = $dbo->getUser();
+	$data = (new WeightDatabase())->getUser();
 	#var_dump($data);
-	sanitizeOutput( $data );
+	array_walk_recursive($data, function(&$value, $key){
+		$value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+	});
+	
 	echo json_encode( $data, JSON_FORCE_OBJECT);
 }
 
@@ -30,8 +32,12 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
 			array_push($errors, 'Gender not recognised');
 		}
 		
-		if( ! validateDate($dob)){
-			array_push($errors, 'Invalid date. Expecting YYYY-MM-DD');
+		require(__DIR__.'/../include/time/Day.php');
+		
+		try {
+			new Day($dob);
+		} catch(Exception $e) {
+			array_push($errors, 'Invalid date of birth');
 		}
 		
 		if( ! is_numeric($height)){
@@ -55,11 +61,11 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
 			exit();
 		}
 		
-		require(__DIR__.'/../include/db.php');
+		require(__DIR__.'/../include/db/WeightDatabase.php');
 		
 		
 		try {
-			$dbo->setUser( [ 
+			(new WeightDatabase())->setUser( [ 
 				'gender' => $gender, 
 				'dob' => $dob, 
 				'height' => $height, 

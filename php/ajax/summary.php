@@ -1,6 +1,8 @@
 <?php
 header("Content-Type: text/html");
-require(__DIR__.'/../include/db.php');
+require(__DIR__.'/../include/db/WeightDatabase.php');
+
+$dbo = new WeightDatabase();
 
 $user = $dbo->getUser();
 

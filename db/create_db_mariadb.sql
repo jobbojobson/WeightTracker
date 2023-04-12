@@ -20,15 +20,24 @@ create table t_user(
 	goal_kg decimal(4,1) unsigned
 );
 
+create table t_image(
+	date date primary key,
+	image blob not null,
+	mime varchar(100) not null,
+	foreign key (date) references t_weight(date) on delete cascade
+);
+
 create or replace view v_weight as 
 select
-	date,
-	kilograms,
-	avg(kilograms) over(order by date rows between 6 preceding and current row) as last_week_average,
-	(kilograms * 2.2046) as pounds,
-	concat(cast(floor((kilograms * 2.2046) / 14) as char), ' ', cast(floor((kilograms * 2.2046) % 14) as char)) as stone,
-	note
-from t_weight;
+	w.date,
+	w.kilograms,
+	avg(w.kilograms) over(order by w.date rows between 6 preceding and current row) as last_week_average,
+	(w.kilograms * 2.2046) as pounds,
+	concat(cast(floor((w.kilograms * 2.2046) / 14) as char), ' ', cast(floor((w.kilograms * 2.2046) % 14) as char)) as stone,
+	w.note,
+	case when i.date is not null then 1 else 0 end as image_exists
+from t_weight w
+left join t_image i on w.date = i.date;
 
 insert into t_user values (
 'M',
@@ -41,4 +50,5 @@ insert into t_user values (
 create user if not exists WeightTracker identified by 'WeightTracker' password expire never;
 grant select, insert, update, delete on t_weight to WeightTracker;
 grant select, insert, update, delete on t_user to WeightTracker;
+grant select, insert, update, delete on t_image to WeightTracker;
 grant select on v_weight to WeightTracker;

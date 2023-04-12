@@ -151,6 +151,7 @@ class MariaDBWeightDAO extends DataAccessObject {
 	}
 	
 	public function getGoogleChartData($fromDate, $toDate){
+
 		
 		$from = false;
 		$to = false;
@@ -195,6 +196,40 @@ class MariaDBWeightDAO extends DataAccessObject {
 		return $output;
 	}
 
+	public function setImage($date, $image, $mime){
+		try {
+			$this->dbo->beginTransaction();
+			
+			$stmt = $this->dbo->prepare('select date from t_image where date = ?');
+			$stmt->execute([$date]);
+			$existingRow = $stmt->fetch();
+			$stmt->closeCursor();
+			
+			$stmt = null;
+			
+			if(is_array($existingRow) && (sizeof($existingRow) > 0)){
+				$stmt = $this->dbo->prepare('UPDATE t_image SET image = :image, mime = :mime WHERE date = :date');
+			} else {
+				$stmt = $this->dbo->prepare('INSERT INTO t_image(date, image, mime) values(:date, :image, :mime)');	
+			}
+			
+			$this->setParamOrNull( $stmt, ':image', $image);
+			$this->setParamOrNull( $stmt, ':mime', $image);
+			$this->setParamOrNull( $stmt, ':date', $date);
+			
+			$stmt->execute();
+			$this->dbo->commit();
+			return true;
+			
+		} catch(Exception $e){
+			$this->dbo->rollback();
+			throw $e;
+		}
+	}
+	
+	public function getImage($date){
+		
+	}
 }
 
 

@@ -50,6 +50,9 @@ header("Set-Cookie: SameSite=None; Secure");
 								<a class="nav-link" href="chart.php"><i class="bi bi-graph-down"></i> Chart</a>
 							</li>
 							<li class="nav-item">
+								<a class="nav-link" href="image.php"><i class="bi bi-image"></i> Images</a>
+							</li>
+							<li class="nav-item">
 								<a class="nav-link" href="config.php"><i class="bi bi-gear-fill"></i> Configuration</a>
 							</li>
 						</ul>

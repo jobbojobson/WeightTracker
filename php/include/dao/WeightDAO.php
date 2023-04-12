@@ -88,6 +88,22 @@ interface WeightDAO {
 		
 	*/
 	public function getGoogleChartData($fromDate, $toDate);
+	
+	/*
+		Set an image against the given date
+		
+		$date string - ISO8601 format (YYYY-MM-DD)
+		$image binary - image data as it comes out of file_get_contents
+		$mime string - the image's MIME type
+		
+		returns true on successful save
+		
+		throws PDOException
+	*/
+	public function setImage($date, $image, $mime);
+	
+	
+	public function getImage($date);
 }
 
 ?>

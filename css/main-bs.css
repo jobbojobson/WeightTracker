@@ -96,3 +96,7 @@ body {
 	display:block;
 	width:100%
 }
+
+#tblData td:has(i.bi-image) {
+	cursor:pointer;
+}

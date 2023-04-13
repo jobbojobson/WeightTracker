@@ -108,6 +108,14 @@ function buildTable( data ){
 	var fromDate = document.getElementById('inpFromDate').valueAsDate;
 	var toDate = document.getElementById('inpToDate').valueAsDate;
 	
+	var getImageButton = function( image_exists ){
+		if( (!image_exists || image_exists === null) || image_exists === '0' ){
+			return ''
+		} else if( image_exists === '1' ) {
+			return '<i class="bi bi-image"></i>'
+		}
+	}
+	
 	for( var date = fromDate; date.getTime() <= toDate.getTime(); date.setTime(date.getTime() + (86400 * 1000))){
 		
 		var row = data.find(function(r){
@@ -121,7 +129,8 @@ function buildTable( data ){
 				last_week_average:null,
 				pounds:null,
 				stone:null,
-				note:null
+				note:null,
+				image_exists:null
 			}
 		}
 		
@@ -134,6 +143,7 @@ function buildTable( data ){
 				'<td class="num-col-small">'+ (row.pounds ? Number(row.pounds).toFixed(2) : '') + '</td>' +
 				'<td class="num-col-small">'+ (row.stone ? row.stone : '') + '</td>' +
 				'<td class="text-col-wide"><input class="form-control" type="text" value="'+ (row.note == null ? '' : row.note) + '" /></td>' +
+				'<td class="button-col-small">'+ getImageButton(row.image_exists) +'</td>'
 			'</tr>';
 	}
 	
@@ -144,8 +154,34 @@ function buildTable( data ){
 		});
 	});
 	
+	document.querySelectorAll('#tblData td:has(i.bi-image)').forEach(function(e){
+		e.addEventListener('click', function( evt ){
+			if( evt.target.localName == 'i' ){
+				showImage(evt.target.parentElement.parentElement);
+			} else {
+				showImage(evt.target.parentElement);
+			}
+		});
+	});
+	
 	var scrl = document.getElementById('scrAllTable');
 	scrl.scrollTop = scrl.scrollHeight;
+}
+
+/*
+
+*/
+function showImage( tr ){
+	var date = tr.querySelector('[data-date]').getAttribute('data-date');
+	
+	var xhr = new XMLHttpRequest();
+	
+	xhr.addEventListener('load', function( evt ){
+		console.log(evt);
+	});
+	
+	xhr.open('GET', 'php/ajax/image.php?date=' + encodeURIComponent(date));
+	xhr.send();
 }
 
 /*

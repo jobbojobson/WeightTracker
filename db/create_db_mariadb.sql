@@ -22,7 +22,7 @@ create table t_user(
 
 create table t_image(
 	date date primary key,
-	image blob not null,
+	image mediumblob not null,
 	mime varchar(100) not null,
 	foreign key (date) references t_weight(date) on delete cascade
 );

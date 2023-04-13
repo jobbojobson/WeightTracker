@@ -24,6 +24,7 @@ $_BODYSCRIPTS = 'js/table.js';
 				<th scope="col" class="num-col-small">Pounds</th>
 				<th scope="col" class="num-col-small">Stone</th>
 				<th scope="col" class="text-col-wide">Note</th>
+				<th scope="col" class="button-col-small">Photo</th>
 			</tr>
 		</thead>
 		<tbody>

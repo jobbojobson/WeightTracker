@@ -1,5 +1,4 @@
 <?php
-header('Content-Type:application/json; charset=UTF-8');
 
 switch($_SERVER['REQUEST_METHOD']){
 	case 'GET': 
@@ -13,10 +12,42 @@ switch($_SERVER['REQUEST_METHOD']){
 
 function get(){
 	
+	# get the row from the database
+	# look at the mime type of the row
+	# set the appropriate header
+	# send back the image data
+	
+	if(isset($_GET['date'])){
+		
+		
+		$date = trim($_GET['date']);
+		
+		require(__DIR__.'/../include/time/Day.php');
+		
+		try{
+			new Day($date);
+		}catch(Exception $e){
+			exit();
+		}
+		
+		require(__DIR__.'/../include/db/WeightDatabase.php');
+		
+		try {
+			$data = (new WeightDatabase())->getImage($date);
+			header('Content-Type:'.$data['mime']);
+			header('Content-Length:'.strlen($data['image']));
+			echo json_encode([ 'success' => true, 'data' => $data['image'] ]);
+		}catch(Exception $e){
+			echo json_encode([ 'errors' => [ $e->getMessage() ]]);
+		}
+		
+	}
 }
 
 
 function post(){
+	
+	header('Content-Type:application/json; charset=UTF-8');
 	
 	if(isset($_FILES['image']) && isset($_POST['date'])){
 		

@@ -84,7 +84,8 @@ class MariaDBWeightDAO extends DataAccessObject {
 				last_week_average,
 				pounds,
 				stone,
-				note
+				note,
+				image_exists
 			from v_weight
 			where date between ? and ? order by date asc");
 		
@@ -97,7 +98,8 @@ class MariaDBWeightDAO extends DataAccessObject {
 				'last_week_average' => (float)$row['last_week_average'],
 				'pounds' => (float)$row['pounds'],
 				'stone' => $row['stone'],
-				'note' => $row['note']
+				'note' => $row['note'],
+				'image_exists' => $row['image_exists']
 			]);
 		}
 		$stmt->closeCursor();
@@ -152,7 +154,6 @@ class MariaDBWeightDAO extends DataAccessObject {
 	
 	public function getGoogleChartData($fromDate, $toDate){
 
-		
 		$from = false;
 		$to = false;
 		$sql = "select unix_timestamp(date) as unixtime,
@@ -213,10 +214,10 @@ class MariaDBWeightDAO extends DataAccessObject {
 				$stmt = $this->dbo->prepare('INSERT INTO t_image(date, image, mime) values(:date, :image, :mime)');	
 			}
 			
-			$this->setParamOrNull( $stmt, ':image', $image);
-			$this->setParamOrNull( $stmt, ':mime', $image);
 			$this->setParamOrNull( $stmt, ':date', $date);
-			
+			$this->setParamOrNull( $stmt, ':image', $image);
+			$this->setParamOrNull( $stmt, ':mime', $mime);
+						
 			$stmt->execute();
 			$this->dbo->commit();
 			return true;
@@ -228,8 +229,17 @@ class MariaDBWeightDAO extends DataAccessObject {
 	}
 	
 	public function getImage($date){
-		
+		try {
+			$stmt = $this->dbo->prepare('SELECT date, image, mime FROM t_image where date = ?');
+			$stmt->execute([ $date ]);
+			$image = $stmt->fetch();
+			$stmt->closeCursor();
+			return $image;
+		} catch(Exception $e){
+			throw $e;
+		}
 	}
+	
 }
 
 

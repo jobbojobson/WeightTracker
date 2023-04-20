@@ -36,7 +36,7 @@ function get(){
 			$data = (new WeightDatabase())->getImage($date);
 			header('Content-Type:'.$data['mime']);
 			header('Content-Length:'.strlen($data['image']));
-			echo json_encode([ 'success' => true, 'data' => $data['image'] ]);
+			echo $data['image']; #
 		}catch(Exception $e){
 			echo json_encode([ 'errors' => [ $e->getMessage() ]]);
 		}

@@ -5,16 +5,19 @@ var bDirty = false;
 document.getElementById('btnSave').addEventListener('click', function( evt ){
 	evt.preventDefault();
 	
+	clearErrors();
+	
 	var xhr = new XMLHttpRequest();
 	
 	xhr.addEventListener('load', function( evt ){
 		var response = JSON.parse( evt.target.response );
 		if( response.success ){
 			setSuccessMessage( 'Saved' );
-			bDirty = false;
 		} else {
 			setErrorMessage( response.errors );
 		}
+		
+		bDirty = false;
 	});
 	
 	xhr.open('POST', 'php/ajax/image.php');

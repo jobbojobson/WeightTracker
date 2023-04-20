@@ -174,14 +174,9 @@ function buildTable( data ){
 function showImage( tr ){
 	var date = tr.querySelector('[data-date]').getAttribute('data-date');
 	
-	var xhr = new XMLHttpRequest();
-	
-	xhr.addEventListener('load', function( evt ){
-		console.log(evt);
-	});
-	
-	xhr.open('GET', 'php/ajax/image.php?date=' + encodeURIComponent(date));
-	xhr.send();
+	document.querySelector('#imagePanel img').setAttribute('src', 'php/ajax/image.php?date=' + encodeURIComponent(date));
+	document.querySelector('#imagePanel h3').innerHTML = (new Date(date)).toLocaleDateString();
+	new bootstrap.Modal(document.getElementById('imagePanel')).show();
 }
 
 /*

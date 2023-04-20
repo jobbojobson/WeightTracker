@@ -224,7 +224,11 @@ class MariaDBWeightDAO extends DataAccessObject {
 			
 		} catch(Exception $e){
 			$this->dbo->rollback();
-			throw $e;
+			if($e->getCode() == '23000'){ #integrity constraint violation
+				throw new Exception('Error: Enter a weight value for this day before uploading an image');
+			} else {
+				throw $e;
+			}
 		}
 	}
 	

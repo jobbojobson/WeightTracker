@@ -3,15 +3,18 @@ ob_start();
 $_BODYSCRIPTS = 'js/table.js';
 ?>
 	
-<div class="table-controls row align-items-center g-3 mb-2">
-	<div class="col-md-auto col-12">
+<div class="table-controls row row-cols-md-auto align-items-center g-3 mb-2">
+
+	<div class="col-md-auto">
 		<span id="scrollControls" class="mr-2">
 			<i class="bi bi-chevron-bar-up"></i>
 			<i class="bi bi-chevron-bar-down"></i>
 		</span>
 	</div>
 	
+	
 	<?php require(__DIR__.'/php/include/ui/ctrl/dateRangeFetch.html'); ?>
+
 </div>
 
 <div id="scrAllTable" class="table-responsive">

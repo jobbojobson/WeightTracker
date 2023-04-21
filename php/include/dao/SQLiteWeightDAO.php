@@ -6,7 +6,7 @@ class SQLiteWeightDAO extends DataAccessObject {
 	
 	function __construct($dsn){
 		parent::__construct($dsn, null, null);
-		#$this->dbo = new PDO('sqlite:'.__DIR__.'/../../db/weight.db');
+		
 		$this->dbo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->dbo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 		$this->dbo->exec('PRAGMA foreign_keys = ON');
@@ -81,7 +81,8 @@ class SQLiteWeightDAO extends DataAccessObject {
 				last_week_average, 
 				pounds, 
 				stone, 
-				note 
+				note,
+				image_exists
 			from v_weight 
 			where date between CAST(strftime('%s', ?) as integer) and CAST(strftime('%s', ?) as integer) order by date asc");
 			
@@ -177,5 +178,64 @@ class SQLiteWeightDAO extends DataAccessObject {
 		return $output;
 	}
 	
+	public function setImage($date, $image, $mime){
+		try {
+			$this->dbo->beginTransaction();
+			
+			$stmt = $this->dbo->prepare("select date from t_image where date = CAST(strftime('%s', ?) as integer)");
+			$stmt->execute([$date]);
+			$existingRow = $stmt->fetch();
+			$stmt->closeCursor();
+			$stmt = null;
+			
+			if(is_array($existingRow) && (sizeof($existingRow) > 0)){
+				$stmt = $this->dbo->prepare("update t_image set image = :image, mime = :mime where date = CAST(strftime('%s', :date) as integer)");
+			} else {
+				$stmt = $this->dbo->prepare("insert into t_image(date, image, mime) values(CAST(strftime('%s', :date) as integer), :image, :mime)");
+			}
+			
+			$this->setParamOrNull( $stmt, ':date', $date);
+			$this->setParamOrNull( $stmt, ':image', $image);
+			$this->setParamOrNull( $stmt, ':mime', $mime);
+						
+			$stmt->execute();
+			$this->dbo->commit();
+			return true;
+		} catch(Exception $e) {
+			$this->dbo->rollback();
+			if($e->getCode() == '23000'){ #integrity constraint violation
+				throw new Exception('Error: Enter a weight value for this day before uploading an image');
+			} else {
+				throw $e;
+			}
+			throw $e;
+		}
+	}
+	
+	public function getImage($date){
+		try {
+			$stmt = $this->dbo->prepare("SELECT date, image, mime FROM t_image where date = CAST(strftime('%s', ?) as integer)");
+			$stmt->execute([ $date ]);
+			$image = $stmt->fetch();
+			$stmt->closeCursor();
+			return $image;
+		} catch(Exception $e){
+			throw $e;
+		}
+	}
+	
+	public function deleteImage($date){
+		try {
+			$this->dbo->beginTransaction();
+			$stmt = $this->dbo->prepare('delete from t_image where date = CAST(strftime('%s', ?) as integer)');
+			$stmt->execute([ $date ]);
+			
+			$this->dbo->commit();
+		} catch(Exception $e){
+			$this->dbo->rollback();
+			throw $e;
+		}
+		
+	}
 }
 ?>

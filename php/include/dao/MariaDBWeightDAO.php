@@ -84,7 +84,8 @@ class MariaDBWeightDAO extends DataAccessObject {
 				last_week_average,
 				pounds,
 				stone,
-				note
+				note,
+				image_exists
 			from v_weight
 			where date between ? and ? order by date asc");
 		
@@ -97,7 +98,8 @@ class MariaDBWeightDAO extends DataAccessObject {
 				'last_week_average' => (float)$row['last_week_average'],
 				'pounds' => (float)$row['pounds'],
 				'stone' => $row['stone'],
-				'note' => $row['note']
+				'note' => $row['note'],
+				'image_exists' => $row['image_exists']
 			]);
 		}
 		$stmt->closeCursor();
@@ -151,7 +153,7 @@ class MariaDBWeightDAO extends DataAccessObject {
 	}
 	
 	public function getGoogleChartData($fromDate, $toDate){
-		
+
 		$from = false;
 		$to = false;
 		$sql = "select unix_timestamp(date) as unixtime,
@@ -195,6 +197,65 @@ class MariaDBWeightDAO extends DataAccessObject {
 		return $output;
 	}
 
+	public function setImage($date, $image, $mime){
+		try {
+			$this->dbo->beginTransaction();
+			
+			$stmt = $this->dbo->prepare('select date from t_image where date = ?');
+			$stmt->execute([$date]);
+			$existingRow = $stmt->fetch();
+			$stmt->closeCursor();
+			
+			$stmt = null;
+			
+			if(is_array($existingRow) && (sizeof($existingRow) > 0)){
+				$stmt = $this->dbo->prepare('UPDATE t_image SET image = :image, mime = :mime WHERE date = :date');
+			} else {
+				$stmt = $this->dbo->prepare('INSERT INTO t_image(date, image, mime) values(:date, :image, :mime)');	
+			}
+			
+			$this->setParamOrNull( $stmt, ':date', $date);
+			$this->setParamOrNull( $stmt, ':image', $image);
+			$this->setParamOrNull( $stmt, ':mime', $mime);
+						
+			$stmt->execute();
+			$this->dbo->commit();
+			return true;
+			
+		} catch(Exception $e){
+			$this->dbo->rollback();
+			if($e->getCode() == '23000'){ #integrity constraint violation
+				throw new Exception('Error: Enter a weight value for this day before uploading an image');
+			} else {
+				throw $e;
+			}
+		}
+	}
+	
+	public function getImage($date){
+		try {
+			$stmt = $this->dbo->prepare('SELECT date, image, mime FROM t_image where date = ?');
+			$stmt->execute([ $date ]);
+			$image = $stmt->fetch();
+			$stmt->closeCursor();
+			return $image;
+		} catch(Exception $e){
+			throw $e;
+		}
+	}
+	
+	public function deleteImage($date){
+		try {
+			$this->dbo->beginTransaction();
+			$stmt = $this->dbo->prepare('delete from t_image where date = ?');
+			$stmt->execute([ $date ]);
+			
+			$this->dbo->commit();
+		} catch(Exception $e){
+			$this->dbo->rollback();
+			throw $e;
+		}
+	}
 }
 
 

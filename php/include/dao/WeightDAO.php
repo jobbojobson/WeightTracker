@@ -26,6 +26,7 @@ interface WeightDAO {
 		pounds decimal
 		stone string
 		note string
+		image_exists int - 1 if a photo exists for this date, 0 otherwise
 		
 		throws PDOException
 	*/
@@ -88,6 +89,40 @@ interface WeightDAO {
 		
 	*/
 	public function getGoogleChartData($fromDate, $toDate);
+	
+	/*
+		Set an image against the given date
+		
+		$date string - ISO8601 format (YYYY-MM-DD)
+		$image binary - image data as it comes out of file_get_contents
+		$mime string - the image's MIME type
+		
+		returns true on successful save
+		
+		throws PDOException
+	*/
+	public function setImage($date, $image, $mime);
+	
+	/*
+		Get the image for the given date.
+		Returns an associative array with the following properties:
+		'date' string - ISO8601 format (YYYY-MM-DD)
+		'image' binary - the image data
+		'mime' string - the image data's mime type
+		
+		throws PDOException
+	*/
+	public function getImage($date);
+	
+	/*
+		Delete the image for the given day if there is one present
+		
+		'date' string - ISO8601 format (YYYY-MM-DD)
+		returns true on successful deletion
+		
+		throws PDOException
+	*/
+	public function deleteImage($date);
 }
 
 ?>

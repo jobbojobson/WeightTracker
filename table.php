@@ -27,7 +27,7 @@ $_BODYSCRIPTS = 'js/table.js';
 				<th scope="col" class="num-col-small">Pounds</th>
 				<th scope="col" class="num-col-small">Stone</th>
 				<th scope="col" class="text-col-wide">Note</th>
-				<th scope="col" class="button-col-small">Photo</th>
+				<th scope="col" class="button-col-small">Image</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -36,7 +36,10 @@ $_BODYSCRIPTS = 'js/table.js';
 </div>
 
 <div class="form-row mt-2 mb-2">
-	<button id="btnSave" class="btn btn-primary submit-form">Save</button>
+	<button id="btnSave" class="btn btn-primary submit-form">
+		<i class="bi bi-database-add"></i>&nbsp;Save
+	</button>
+	
 	<?php require(__DIR__.'/php/include/ui/ctrl/msgPanel.html'); ?>
 	
 	<button id="btnExport" class="btn btn-primary float-end">
@@ -44,31 +47,11 @@ $_BODYSCRIPTS = 'js/table.js';
 	</button>
 </div>
 
-<div id="summary">
-	
-</div>
-
-<div id="imagePanel" class="modal fade" tabindex="-1">
-
-	<div class="modal-dialog modal-dialog-centered">
-	
-		<div class="modal-content">
-			<div class="modal-header">
-				<h3 class="modal-title">Image</h3>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<img src=""/>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-			</div>
-		</div>
-
-	</div>
-</div>
 
 <?php
+include('php/include/ui/ctrl/imageUploadPanel.html');
+
+include('php/include/ui/ctrl/imageViewPanel.html');
 
 $_PAGECONTENT = ob_get_contents();
 ob_end_clean();

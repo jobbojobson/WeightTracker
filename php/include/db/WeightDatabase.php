@@ -9,6 +9,7 @@ class WeightDatabase extends MariaDBWeightDAO {
 	
 	function __construct(){
 		parent::__construct('mysql:host=localhost;dbname=WeightTracker', 'WeightTracker', 'WeightTracker');
+		#parent::__construct('sqlite:'.__DIR__.'/../../../db/weight.db');
 	}
 }
 ?>

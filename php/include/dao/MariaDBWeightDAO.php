@@ -244,6 +244,18 @@ class MariaDBWeightDAO extends DataAccessObject {
 		}
 	}
 	
+	public function deleteImage($date){
+		try {
+			$this->dbo->beginTransaction();
+			$stmt = $this->dbo->prepare('delete from t_image where date = ?');
+			$stmt->execute([ $date ]);
+			
+			$this->dbo->commit();
+		} catch(Exception $e){
+			$this->dbo->rollback();
+			throw $e;
+		}
+	}
 }
 
 

@@ -113,6 +113,16 @@ interface WeightDAO {
 		throws PDOException
 	*/
 	public function getImage($date);
+	
+	/*
+		Delete the image for the given day if there is one present
+		
+		'date' string - ISO8601 format (YYYY-MM-DD)
+		returns true on successful deletion
+		
+		throws PDOException
+	*/
+	public function deleteImage($date);
 }
 
 ?>

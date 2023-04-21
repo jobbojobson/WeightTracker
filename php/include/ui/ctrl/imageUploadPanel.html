@@ -1,0 +1,28 @@
+<div id="imageUploadPanel" class="modal fade" tabindex="-1">
+
+	<div class="modal-dialog modal-dialog-centered">
+	
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">Upload Image</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="frmImageUpload">
+					<div class="form-group mb-2">
+						<label for="inpImageUploadFile" class="form-label">Photo</label>
+						<input name="image" id="inpImageUploadFile" type="file" class="form-control"/>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<div class="d-inline-block">
+					<span id="msgImageUploadError" class="message text-danger"></span>
+				</div>
+				<button id="btnImageUploadSave" type="button" class="btn btn-primary"><i class="bi bi-database-add"></i>&nbsp;Save</button>
+				<button id="btnImageUploadClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		</div>
+
+	</div>
+</div>

@@ -23,21 +23,6 @@ function getData( from, to ){
 				
 				buildTable( response.data );
 				
-				/*
-				Pull the summary data
-				*/
-				(function() {
-					
-					var xhr = new XMLHttpRequest();
-					
-					xhr.addEventListener('load', function( evt ){
-						document.getElementById('summary').innerHTML = evt.target.response;
-					});
-					
-					xhr.open('GET', 'php/ajax/summary.php');
-					xhr.send();
-				})();
-				
 			} else if( response.errors ) {
 				setErrorMessage( response.errors );
 			}
@@ -109,10 +94,20 @@ function buildTable( data ){
 	var toDate = document.getElementById('inpToDate').valueAsDate;
 	
 	var getImageButton = function( image_exists ){
-		if( (!image_exists || image_exists === null) || image_exists === '0' ){
-			return ''
+		if(!image_exists || image_exists === null){
+			return '';
+		} else if( image_exists === '0' ){
+			return '<i class="bi bi-plus"></i>';
 		} else if( image_exists === '1' ) {
-			return '<i class="bi bi-image"></i>'
+			return '<i class="bi bi-image"></i>';
+		}
+	}
+	
+	var getImageHandler = function( date, image_exists ){
+		if(!image_exists || image_exists === null || image_exists === '0'){
+			return 'uploadImage(\''+ date +'\')';
+		} else {
+			return 'viewImage(\''+ date +'\')';
 		}
 	}
 	
@@ -143,7 +138,7 @@ function buildTable( data ){
 				'<td class="num-col-small">'+ (row.pounds ? Number(row.pounds).toFixed(2) : '') + '</td>' +
 				'<td class="num-col-small">'+ (row.stone ? row.stone : '') + '</td>' +
 				'<td class="text-col-wide"><input class="form-control" type="text" value="'+ (row.note == null ? '' : row.note) + '" /></td>' +
-				'<td class="button-col-small">'+ getImageButton(row.image_exists) +'</td>'
+				'<td class="button-col-small" onclick="'+ getImageHandler((date.toISOString().substring(0, 10)), row.image_exists) +'">'+ getImageButton(row.image_exists) +'</td>'
 			'</tr>';
 	}
 	
@@ -154,30 +149,90 @@ function buildTable( data ){
 		});
 	});
 	
-	document.querySelectorAll('#tblData td:has(i.bi-image)').forEach(function(e){
-		e.addEventListener('click', function( evt ){
-			if( evt.target.localName == 'i' ){
-				showImage(evt.target.parentElement.parentElement);
-			} else {
-				showImage(evt.target.parentElement);
-			}
-		});
-	});
 	
 	var scrl = document.getElementById('scrAllTable');
 	scrl.scrollTop = scrl.scrollHeight;
 }
 
 /*
-
+	Setup the content of the image viewing dialog
 */
-function showImage( tr ){
-	var date = tr.querySelector('[data-date]').getAttribute('data-date');
+function viewImage(date){
+	document.querySelector('#imageViewPanel img').setAttribute('src', 'php/ajax/image.php?date=' + encodeURIComponent(date));
+	document.querySelector('#imageViewPanel h3').innerHTML = (new Date(date)).toLocaleDateString();
+	document.querySelector('#imageViewPanel h3').setAttribute('data-date', date);
 	
-	document.querySelector('#imagePanel img').setAttribute('src', 'php/ajax/image.php?date=' + encodeURIComponent(date));
-	document.querySelector('#imagePanel h3').innerHTML = (new Date(date)).toLocaleDateString();
-	new bootstrap.Modal(document.getElementById('imagePanel')).show();
+	new bootstrap.Modal(document.getElementById('imageViewPanel')).show();
 }
+
+/*
+	Setup the functionality of the delete button on the image viewing dialog
+*/
+document.getElementById('btnImageViewDelete').addEventListener('click', function(evt){
+	evt.preventDefault();
+	
+	var date = document.querySelector('#imageViewPanel h3').getAttribute('data-date');
+	
+	var xhr = new XMLHttpRequest();
+		
+	xhr.addEventListener('load', function( evt ){
+		document.getElementById('btnImageViewClose').click();
+		getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
+	});
+	
+	var fd = new FormData();
+	fd.append('date', date);
+	fd.append('delete', 'true');
+	
+	xhr.open('POST', 'php/ajax/image.php');
+	xhr.send( fd );
+});
+
+/*
+	Setup the contents of the upload dialog and then open it
+*/
+function uploadImage(date){
+	document.querySelector('#imageUploadPanel h3').innerHTML = 'Image Upload - ' + (new Date(date)).toLocaleDateString();
+	document.querySelector('#imageUploadPanel input').value = null;
+	
+	document.querySelector('#imageUploadPanel h3').setAttribute('data-date', date);
+	
+	new bootstrap.Modal(document.getElementById('imageUploadPanel')).show();
+}
+
+/*
+	setup the functionality of the save button on the image upload dialog
+*/
+document.getElementById('btnImageUploadSave').addEventListener('click', function( evt ){
+	evt.preventDefault();
+	
+	var date = document.querySelector('#imageUploadPanel h3').getAttribute('data-date');
+	
+	var msgErrors = document.getElementById('msgImageUploadError');
+	msgErrors.innerHTML = '';
+	
+	var xhr = new XMLHttpRequest();
+	
+	xhr.addEventListener('load', function( evt ){
+		var response = JSON.parse( evt.target.response );
+		if( response.success ){
+			document.getElementById('btnImageUploadClose').click();
+			getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
+		} else {
+			for(var err in response.errors){
+				msgErrors.innerHTML += response.errors[err] + '</br>';
+			}
+		}
+		
+	});
+	
+	var fd = new FormData( document.getElementById( 'frmImageUpload' ) );
+	fd.append('date', date);
+	
+	xhr.open('POST', 'php/ajax/image.php');
+	xhr.send( fd );	
+});
+
 
 /*
 	Fetch button event handler

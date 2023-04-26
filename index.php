@@ -26,7 +26,7 @@ $_BODYSCRIPTS = 'js/daily.js';
 
 	</div>
 
-	<div id="summary" class="col-md-8 col-lg-10">
+	<div id="summary" class="col-md-8 col-lg-10 mt-2">
 		
 	</div>
 </div>

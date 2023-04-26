@@ -33,10 +33,10 @@ function get(){
 		require(__DIR__.'/../include/db/WeightDatabase.php');
 		
 		try {
-			$data = (new WeightDatabase())->getImage($date);
+			$data = (new WeightDatabase())->getImage(htmlspecialchars($date));
 			header('Content-Type:'.$data['mime']);
 			header('Content-Length:'.strlen($data['image']));
-			echo $data['image']; #
+			echo $data['image'];
 		}catch(Exception $e){
 			header('Content-Type:application/json; charset=UTF-8');
 			echo json_encode([ 'errors' => [ $e->getMessage() ]]);

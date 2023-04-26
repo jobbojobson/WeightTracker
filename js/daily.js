@@ -65,7 +65,7 @@ document.getElementById('btnSave').addEventListener('click', function(evt){
 });
 
 document.getElementById('inpDayValue').addEventListener('keyup', function(evt){
-	if(evt.key === 'Enter'){
+	if(evt.keyCode === 13){ //enter
 		var e = document.getElementById('btnSave');
 		if(typeof e.click == 'function')
 			e.click();

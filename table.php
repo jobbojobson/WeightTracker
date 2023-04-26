@@ -36,9 +36,7 @@ $_BODYSCRIPTS = 'js/table.js';
 </div>
 
 <div class="form-row mt-2 mb-2">
-	<button id="btnSave" class="btn btn-primary submit-form">
-		<i class="bi bi-database-add"></i>&nbsp;Save
-	</button>
+	<?php require(__DIR__.'/php/include/ui/ctrl/saveButton.html'); ?>
 	
 	<?php require(__DIR__.'/php/include/ui/ctrl/msgPanel.html'); ?>
 	

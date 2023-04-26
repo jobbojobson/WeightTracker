@@ -38,9 +38,7 @@ ob_start();
 		<input name="goal" id="inpGoal" type="number" step=".1" class="form-control"/>
 	</div>	
 	<div class="save-panel">
-		<button id="btnSave" class="btn btn-primary">
-			<i class="bi bi-database-add"></i>&nbsp;Save
-		</button>
+		<?php require(__DIR__.'/php/include/ui/ctrl/saveButton.html'); ?>
 		<?php require(__DIR__.'/php/include/ui/ctrl/msgPanel.html'); ?>
 	</div>
 	

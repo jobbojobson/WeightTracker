@@ -7,7 +7,7 @@ $_BODYSCRIPTS = 'js/daily.js';
 
 <div class="row">
 
-	<div class="col-md-4 col-lg-2">
+	<div class="col-md-4 col-lg-3">
 
 		<div class="form-group mb-3">
 			<label for="inpDayValue" class="form-label">Weight</label>
@@ -18,15 +18,12 @@ $_BODYSCRIPTS = 'js/daily.js';
 			<input id="inpDayNote" class="form-control" type="text" />
 		</div>
 
-
-		<button id="btnSave" type="button" class="btn btn-primary">
-			<i class="bi bi-database-add"></i>&nbsp;Save
-		</button>
+		<?php require(__DIR__.'/php/include/ui/ctrl/saveButton.html'); ?>
 		<?php require(__DIR__.'/php/include/ui/ctrl/msgPanel.html'); ?>
 
 	</div>
 
-	<div id="summary" class="col-md-8 col-lg-10 mt-2">
+	<div id="summary" class="col-md-8 col-lg-9 mt-2">
 		
 	</div>
 </div>

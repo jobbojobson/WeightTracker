@@ -39,7 +39,7 @@ function updateChartData( ){
 function drawChart( ){
 	
 	var width = document.getElementById('lineChart').clientWidth;
-	var height = (width / 5) * 4;
+	var height = (width / 5) * 3;
 	
 	var options = {
 		backgroundColor: '#343a40',
@@ -61,7 +61,7 @@ function drawChart( ){
 		},
 		hAxis: { 
 			textStyle: { color: '#c8c8c8' }, 
-			format: 'MMMM dd',
+			format: 'MMMM YYYY',
 			title:'',
 			gridlines: {
 				count:4

@@ -14,7 +14,7 @@ var bUnsavedData = false;
 		
 		if( response.data && response.data.length > 0 ){
 			document.getElementById('inpDayValue').value = Number(response.data[0].kilograms).toFixed(1);
-			document.getElementById('inpDayNote').value = response.data[0].note;
+			document.getElementById('inpDayNote').value = decodeHtml(response.data[0].note);
 		}
 		
 		document.getElementById('btnSave').disabled = false;

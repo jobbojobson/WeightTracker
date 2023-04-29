@@ -84,8 +84,16 @@ body {
 }
 
 .num-col-small {
-	max-width:100px;
+	max-width:140px;
 	min-width:80px;
+}
+
+.table-summary thead th:nth-child(1) {
+	max-width:10em;
+}
+
+.table-summary tbody td:nth-child(1){
+	text-align:right;
 }
 
 .text-col-wide {

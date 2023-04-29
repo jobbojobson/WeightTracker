@@ -44,10 +44,10 @@ function getBMR($user, $currentWeight){
 ?>
 
 <div class="table-responsive mb-2">
-	<table class="table table-sm align-middle table-bordered">
+	<table class="table table-sm align-middle table-bordered table-summary">
 		<thead class="table-dark">
 			<tr>
-				<th class="wide-col"></th>
+				<th></th>
 				<th class="num-col-small">KG</th>
 				<th class="num-col-small">Pounds</th>
 				<th class="num-col-small">Stone</th>
@@ -55,7 +55,7 @@ function getBMR($user, $currentWeight){
 		</thead>
 		<tbody>
 			<tr>
-				<td class="col-wide">Target Weight</td>
+				<td>Target Weight</td>
 				<td><?php echo number_format(round($user['goal_kg'], 1), 1) ?></td>
 				<td><?php echo number_format(round(getPounds($user['goal_kg']), 2), 2) ?></td>
 				<td><?php echo getStones(getPounds($user['goal_kg'])) ?></td>
@@ -85,9 +85,9 @@ function getBMR($user, $currentWeight){
 	<table class="table table-sm align-middle table-bordered">
 		<thead class="table-dark">
 			<tr>
-				<th class="wide-col">Current BMI</th>
-				<th class="wide-col">Current BMR</th>
-				<th class="wide-col">BMR Minus Deficit</th>
+				<th>Current BMI</th>
+				<th>Current BMR</th>
+				<th>BMR Minus Deficit</th>
 			</tr>
 		</thead>
 		<tbody>

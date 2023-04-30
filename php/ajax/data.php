@@ -1,5 +1,4 @@
-<?php
-header('Content-Type:application/json; charset=UTF-8');
+<?php 
 
 switch($_SERVER['REQUEST_METHOD']){
 	case 'GET': 
@@ -9,6 +8,8 @@ switch($_SERVER['REQUEST_METHOD']){
 		post();
 		break;
 }
+
+exit();
 
 function get(){
 	
@@ -44,7 +45,7 @@ function get(){
 			if(isset($_GET['export']) && sizeof($data) > 0){
 				createCSV( $data );
 			} else {
-				#var_dump($data);
+				header('Content-Type:application/json; charset=UTF-8');
 				
 				array_walk_recursive($data, function(&$value, $key){
 					$value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
@@ -55,9 +56,7 @@ function get(){
 		} catch(PDOException $e) {
 			echo json_encode(['errors' => [ $e->getMessage() ]]);
 		}
-		
 	}
-	
 }
 
 
@@ -75,6 +74,8 @@ function post(){
 	
 	require(__DIR__.'/../include/db/WeightDatabase.php');
 	
+	header('Content-Type:application/json; charset=UTF-8');
+	
 	try {
 		
 		(new WeightDatabase())->setData($data);
@@ -86,7 +87,6 @@ function post(){
 	}
 	
 }
-
 
 function createCSV( $data ){
 	

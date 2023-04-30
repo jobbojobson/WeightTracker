@@ -15,26 +15,31 @@ function updateChartData( ){
 	xhr.addEventListener('load', function( evt ){
 		var response = JSON.parse( evt.target.response );
 		
-		if( ! response.success ) return; //TODO
+		if( ! response.success ) return;
 		
-		//turn the ISO8601 strings into JS Dates
-		for( var i = 0; i < response.data.length; i++ ){
-			response.data[i][0] = new Date(response.data[i][0]);
-		}
-				
 		var chartData = new google.visualization.DataTable();
 		chartData.addColumn('date', 'Date');
 		chartData.addColumn('number', '7 Day Rolling Average');
-		chartData.addRows( response.data );
+		chartData.addRows( prepareData(response.data) );
 		
 		data = chartData;
 		drawChart();
 	});
 	
-	xhr.open('GET', 'php/ajax/chart.php?fromDate=' + encodeURIComponent(fromDate) + '&toDate=' + encodeURIComponent(toDate) );
+	xhr.open('GET', 'php/ajax/data.php?fromDate=' + encodeURIComponent(fromDate) + '&toDate=' + encodeURIComponent(toDate) );
 	xhr.send();
 }
 
+function prepareData( data ){
+	
+	var chartData = [];
+	
+	for( var i = 0; i < data.length; i++ ){
+		chartData.push([ new Date(data[i].date), Number(data[i].last_week_average) ]);
+	}
+	
+	return chartData;
+}
 
 function drawChart( ){
 	

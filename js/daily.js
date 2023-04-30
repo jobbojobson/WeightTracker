@@ -21,7 +21,7 @@ var bUnsavedData = false;
 	});
 	
 	var queryString = '?fromDate=' + encodeURIComponent(lbl.getAttribute('data-date')) + '&toDate=' + encodeURIComponent(lbl.getAttribute('data-date'));
-	xhr.open('GET', 'php/ajax/table.php' + queryString);
+	xhr.open('GET', 'php/ajax/data.php' + queryString);
 	xhr.send();
 })();
 
@@ -59,7 +59,7 @@ document.getElementById('btnSave').addEventListener('click', function(evt){
 	
 	clearErrors();
 	
-	xhr.open('POST', 'php/ajax/table.php');
+	xhr.open('POST', 'php/ajax/data.php');
 	xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 	xhr.send( JSON.stringify(payload) );
 });

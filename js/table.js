@@ -32,7 +32,7 @@ function getData( from, to ){
 		document.getElementById('tblData').classList.remove('ajax-loading');
 	});
 	
-	xhr.open('GET', 'php/ajax/table.php?fromDate=' + encodeURIComponent(from.value) + '&toDate=' + encodeURIComponent(to.value));
+	xhr.open('GET', 'php/ajax/data.php?fromDate=' + encodeURIComponent(from.value) + '&toDate=' + encodeURIComponent(to.value));
 	xhr.send();
 }
 
@@ -77,7 +77,7 @@ function saveData(){
 	
 	clearErrors();
 	
-	xhr.open('POST', 'php/ajax/table.php');
+	xhr.open('POST', 'php/ajax/data.php');
 	xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
 	xhr.send( JSON.stringify(payload) );
 }
@@ -264,7 +264,7 @@ document.getElementById('btnSave').addEventListener('click', saveData);
 document.getElementById('btnExport').addEventListener('click', function(){
 	
 	window.location = 
-		'php/ajax/table.php' +
+		'php/ajax/data.php' +
 		'?fromDate=' + encodeURIComponent(document.getElementById('inpFromDate').value) + 
 		'&toDate=' + encodeURIComponent(document.getElementById('inpToDate').value) + 
 		'&export';

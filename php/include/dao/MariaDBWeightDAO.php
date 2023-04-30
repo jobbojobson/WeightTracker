@@ -151,51 +151,6 @@ class MariaDBWeightDAO extends DataAccessObject {
 			throw $e;
 		}
 	}
-	
-	public function getGoogleChartData($fromDate, $toDate){
-
-		$from = false;
-		$to = false;
-		$sql = "select unix_timestamp(date) as unixtime,
-					date,
-					last_week_average
-				from
-					v_weight
-				where date between ";
-				
-		if($fromDate == null){
-			$sql .= "(select min(date) from v_weight) and ";
-		} else {
-			$sql .= ":from and ";
-			$from = true;
-		}
-		
-		if($toDate == null){
-			$sql .= "(select max(date) from v_weight) ";
-		} else {
-			$sql .= ":to ";
-			$to = true;
-		}
-		
-		$sql .= "order by unixtime";
-		$stmt = $this->dbo->prepare($sql);
-		
-		if($from) $stmt->bindValue(':from', $fromDate);
-		if($to) $stmt->bindValue(':to', $toDate);
-		
-		$stmt->execute();
-		
-		$output = [];
-		while($row = $stmt->fetch()){
-			array_push( $output, [
-				$row['date'],
-				(float)$row['last_week_average']
-			]);
-		}
-		
-		$stmt->closeCursor();
-		return $output;
-	}
 
 	public function setImage($date, $image, $mime){
 		try {

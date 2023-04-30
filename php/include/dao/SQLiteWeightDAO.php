@@ -134,50 +134,6 @@ class SQLiteWeightDAO extends DataAccessObject {
 		}
 	}
 	
-	public function getGoogleChartData($fromDate, $toDate){
-		
-		$from = false;
-		$to = false;
-		$sql = "select 
-					date as unixtime,
-					strftime('%Y-%m-%d', datetime(date, 'unixepoch')) as date,
-					last_week_average
-				from
-					v_weight
-				where date between ";
-		
-		
-		if($fromDate == null){
-			$sql .= "(select min(date) from v_weight) and ";
-		} else {
-			$sql .= "CAST(strftime('%s', :from) as integer) and ";
-			$from = true;	
-		}
-		
-		if($toDate == null){
-			$sql .= "(select max(date) from v_weight) ";
-		} else {
-			$sql .= "CAST(strftime('%s', :to) as integer) ";
-			$to = true;
-		}
-		
-		$sql .= "order by unixtime";
-		$stmt = $this->dbo->prepare($sql);
-		
-		if($from) $stmt->bindValue(':from', $fromDate);
-		if($to) $stmt->bindValue(':to', $toDate);
-		
-		$stmt->execute();
-		
-		$output = [];
-		while($row = $stmt->fetch()){
-			array_push($output, [ $row['date'], $row['last_week_average'] ]);
-		}
-		
-		$stmt->closeCursor();
-		return $output;
-	}
-	
 	public function setImage($date, $image, $mime){
 		try {
 			$this->dbo->beginTransaction();

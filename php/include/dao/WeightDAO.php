@@ -77,20 +77,6 @@ interface WeightDAO {
 	public function setUser($user);
 	
 	/*
-		Get data in a Google Charts friendly format, from $fromDate to $toDate
-		if $fromDate is null, this method should set it to the earliest date in the database
-		if $toDate is null, this method should set it to the latest date in the database
-		
-		fromDate string - ISO8601 format (YYYY-MM-DD)
-		toDate string - ISO8601 format (YYYY-MM-DD)
-		
-		returns array of arrays as expected by Google Charts:
-		[ [ "2023-07-16", 90.5 ] ]
-		
-	*/
-	public function getGoogleChartData($fromDate, $toDate);
-	
-	/*
 		Set an image against the given date
 		
 		$date string - ISO8601 format (YYYY-MM-DD)

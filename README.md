@@ -1,5 +1,5 @@
 # WeightTracker
-A simple daily weight tracker based on PHP and AJAX
+A simple daily weight tracker based on PHP and Bootstrap, communicating with the server side using AJAX
 
 The intention of this application is to provide a weight tracking solution that is slightly less unwieldy than a forever-growing spreadsheet. The main goal is for this to perform very quickly even if the database has several years worth of data in it. It also holds some basic information about you so that it can show you BMI/BMR.
 
@@ -11,7 +11,7 @@ A simple daily landing page allows you to enter the data for the current day, an
 
 The app makes use of Google Charts to present a line chart of data.
 
-It is vanilla Javascript and PHP throughout, with the only dependency being Bootstrap 5.3, included via CDN.
+It is vanilla Javascript and PHP throughout, with the only dependency being Bootstrap 5.3 and Google charts
 
 ![image](https://user-images.githubusercontent.com/59516714/233742319-08e6b47c-5a6e-4055-9dc6-a56e70c33e86.png)
 

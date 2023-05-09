@@ -194,8 +194,8 @@ document.getElementById('btnImageViewDelete').addEventListener('click', function
 function uploadImage(date){
 	document.querySelector('#imageUploadPanel h3').innerHTML = 'Image Upload - ' + (new Date(date)).toLocaleDateString();
 	document.querySelector('#imageUploadPanel input').value = null;
-	
 	document.querySelector('#imageUploadPanel h3').setAttribute('data-date', date);
+	document.getElementById('msgImageUploadError').innerHTML = '';
 	
 	new bootstrap.Modal(document.getElementById('imageUploadPanel')).show();
 }

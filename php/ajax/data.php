@@ -23,6 +23,8 @@ function get(){
 		$fromDate = trim($_GET['fromDate']);
 		$toDate = trim($_GET['toDate']);
 		
+		header('Content-Type:application/json; charset=UTF-8');
+				
 		try {
 			$fromDate = new Day($fromDate);
 			$toDate = new Day($toDate);
@@ -45,7 +47,6 @@ function get(){
 			if(isset($_GET['export']) && sizeof($data) > 0){
 				createCSV( $data );
 			} else {
-				header('Content-Type:application/json; charset=UTF-8');
 				
 				array_walk_recursive($data, function(&$value, $key){
 					$value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
@@ -65,6 +66,8 @@ function post(){
 	$posted = file_get_contents('php://input');
 	$data = json_decode( trim( $posted ) );
 	
+	header('Content-Type:application/json; charset=UTF-8');
+	
 	if(is_null($data) || !is_array($data)){
 		echo json_encode([ 'errors' => [ 'Invalid input' ]]);
 		exit();
@@ -73,8 +76,6 @@ function post(){
 	# test that the posted data is actually a weight array from our front end
 	
 	require(__DIR__.'/../include/db/WeightDatabase.php');
-	
-	header('Content-Type:application/json; charset=UTF-8');
 	
 	try {
 		

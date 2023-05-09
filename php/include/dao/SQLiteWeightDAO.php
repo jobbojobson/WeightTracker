@@ -183,7 +183,7 @@ class SQLiteWeightDAO extends DataAccessObject {
 	public function deleteImage($date){
 		try {
 			$this->dbo->beginTransaction();
-			$stmt = $this->dbo->prepare('delete from t_image where date = CAST(strftime('%s', ?) as integer)');
+			$stmt = $this->dbo->prepare("delete from t_image where date = CAST(strftime('%s', ?) as integer)");
 			$stmt->execute([ $date ]);
 			
 			$this->dbo->commit();

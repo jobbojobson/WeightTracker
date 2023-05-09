@@ -1,78 +1,67 @@
 
-var bUnsavedData = false;
+let bUnsavedData = false;
 
-(function(){
+(async () => {
 	var lbl = document.getElementById('spnDate');
 	lbl.innerHTML = new Date(lbl.getAttribute('data-date')).toLocaleDateString();
 	
-	var xhr = new XMLHttpRequest();
-	
 	document.getElementById('btnSave').disabled = true;
 	
-	xhr.addEventListener('load', function(evt){
-		var response = JSON.parse( evt.target.response );
-		
-		if( response.data && response.data.length > 0 ){
-			document.getElementById('inpDayValue').value = Number(response.data[0].kilograms).toFixed(1);
-			document.getElementById('inpDayNote').value = decodeHtml(response.data[0].note);
-		}
-		
-		document.getElementById('btnSave').disabled = false;
-	});
+	let r = await fetch('php/ajax/data.php?fromDate=' + encodeURIComponent(lbl.getAttribute('data-date')) + '&toDate=' + encodeURIComponent(lbl.getAttribute('data-date')));
+	let d = await r.json();
 	
-	var queryString = '?fromDate=' + encodeURIComponent(lbl.getAttribute('data-date')) + '&toDate=' + encodeURIComponent(lbl.getAttribute('data-date'));
-	xhr.open('GET', 'php/ajax/data.php' + queryString);
-	xhr.send();
+	if(d.data && d.data.length > 0){
+		document.getElementById('inpDayValue').value = Number(d.data[0].kilograms).toFixed(1);
+		document.getElementById('inpDayNote').value = decodeHtml(d.data[0].note);
+	}
+	
+	document.getElementById('btnSave').disabled = false;
 })();
 
-document.querySelectorAll('input').forEach( function( input ){
-	input.addEventListener('change', function(evt){
+document.querySelectorAll('input').forEach( el => {
+	el.addEventListener('change', evt => {
 		bUnsavedData = true;
 	});	
 });
 
-document.getElementById('btnSave').addEventListener('click', function(evt){
+document.getElementById('btnSave').addEventListener('click', async evt => {
 	if( !bUnsavedData ) return;
 	
 	document.getElementById('btnSave').disabled = true;
+	clearErrors();	
 	
-	var xhr = new XMLHttpRequest();
-	
-	var payload = [{
-		date : document.getElementById('spnDate').getAttribute('data-date'),
-		kilograms : document.getElementById('inpDayValue').value,
-		note : (document.getElementById('inpDayNote').value.length ? document.getElementById('inpDayNote').value : null)
-	}];
-	
-	xhr.addEventListener('load', function( evt ){
-		var response = JSON.parse( evt.target.response );
-		
-		if( response.success ){
-			setSuccessMessage("Saved");
-			bUnsavedData = false;
-			getSummary();
-		} else if( response.errors ){
-			setErrorMessage( response.errors );
-		}
-		document.getElementById('btnSave').disabled = false;
+	let r = await fetch('php/ajax/data.php', {
+		method:'POST',
+		body:JSON.stringify([{
+			date : document.getElementById('spnDate').getAttribute('data-date'),
+			kilograms : document.getElementById('inpDayValue').value,
+			note : (document.getElementById('inpDayNote').value.length ? document.getElementById('inpDayNote').value : null)
+		}])
 	});
 	
-	clearErrors();
+	let d = await r.json();
 	
-	xhr.open('POST', 'php/ajax/data.php');
-	xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-	xhr.send( JSON.stringify(payload) );
+	if(d.success){
+		setSuccessMessage("Saved");
+		bUnsavedData = false;
+		getSummary();
+	} else if (d.errors) {
+		setErrorMessage( response.errors );
+	}
+	
+	document.getElementById('btnSave').disabled = false;
 });
 
-document.getElementById('inpDayValue').addEventListener('keyup', function(evt){
+
+document.getElementById('inpDayValue').addEventListener('keyup', evt => {
 	if(evt.keyCode === 13){ //enter
-		var e = document.getElementById('btnSave');
+		let e = document.getElementById('btnSave');
 		if(typeof e.click == 'function')
 			e.click();
 	}
 });
 
-window.addEventListener('beforeunload', function(e){
+window.addEventListener('beforeunload', e => {
 	if(bUnsavedData){
 		(e || window.event).returnValue = "There is unsaved data on the page";
 	}
@@ -81,16 +70,9 @@ window.addEventListener('beforeunload', function(e){
 /*
 Pull the summary data
 */
-function getSummary() {
-	
-	var xhr = new XMLHttpRequest();
-	
-	xhr.addEventListener('load', function( evt ){
-		document.getElementById('summary').innerHTML = evt.target.response;
-	});
-	
-	xhr.open('GET', 'php/ajax/summary.php');
-	xhr.send();
+async function getSummary() {
+	let r = await fetch('php/ajax/summary.php');
+	document.getElementById('summary').innerHTML = await r.text();
 }
 
 getSummary();

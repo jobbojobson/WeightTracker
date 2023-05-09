@@ -1,86 +1,66 @@
-//
-
 var bUnsavedData = false;
 
 //takes html input elements of type="date"
-function getData( from, to ){
+async function getData( from, to ){
 	
 	if(!from.value || !to.value){
 		return;
 	}
 	
-	var xhr = new XMLHttpRequest();
-	
 	document.getElementById('btnSave').disabled = true;
 	document.getElementById('tblData').classList.add('ajax-loading');
 	
-	xhr.addEventListener('load', function( evt ){
-		
-		if( evt.target.response ){
-			var response = JSON.parse( evt.target.response );
-			
-			if( response.success ){
-				
-				buildTable( response.data );
-				
-			} else if( response.errors ) {
-				setErrorMessage( response.errors );
-			}
-		}
-		
-		document.getElementById('btnSave').disabled = false;
-		document.getElementById('tblData').classList.remove('ajax-loading');
-	});
+	let r = await fetch('php/ajax/data.php?fromDate=' + encodeURIComponent(from.value) + '&toDate=' + encodeURIComponent(to.value));
+	let d = await r.json();
 	
-	xhr.open('GET', 'php/ajax/data.php?fromDate=' + encodeURIComponent(from.value) + '&toDate=' + encodeURIComponent(to.value));
-	xhr.send();
+	document.getElementById('btnSave').disabled = false;
+	document.getElementById('tblData').classList.remove('ajax-loading');
+	
+	if(d.success){
+		buildTable(d.data);
+	} else if(d.errors) {
+		setErrorMessage(d.errors);
+	}
 }
 
 /*
-	POST all the dirty rows
+	Save button event handler
 */
-function saveData(){
+document.getElementById('btnSave').addEventListener('click', async e => {
 	if ( !bUnsavedData ) return;
-	
-	document.getElementById('btnSave').disabled = true;
-	document.getElementById('tblData').classList.add('ajax-loading');
-	
-	var xhr = new XMLHttpRequest();
-	
-	xhr.addEventListener('load', function( evt ){
-		var response = JSON.parse( evt.target.response );
-		
-		if( response.success ){
-			setSuccessMessage( "Saved" );
-			bUnsavedData = false;
-			getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
-		} else if( response.errors) {
-			setErrorMessage( response.errors );
-		}
-		document.getElementById('btnSave').disabled = false;
-		document.getElementById('tblData').classList.remove('ajax-loading');
-		
-	});
-	
-	var payload = [];
-	
-	document.querySelectorAll('.table-warning').forEach(function( el ){
-		
-		var dirtyRow = {
-			date : el.querySelector('td:nth-Child(1)').getAttribute('data-date'),
-			kilograms : el.querySelector('td:nth-Child(2) > input').value,
-			note : el.querySelector('td:nth-Child(6) > input').value
-		};
-		
-		payload.push( dirtyRow );
-	});
 	
 	clearErrors();
 	
-	xhr.open('POST', 'php/ajax/data.php');
-	xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
-	xhr.send( JSON.stringify(payload) );
-}
+	let payload = [];
+	
+	document.querySelectorAll('.table-warning').forEach( el => {
+		payload.push({
+			date : el.querySelector('td:nth-Child(1)').getAttribute('data-date'),
+			kilograms : el.querySelector('td:nth-Child(2) > input').value,
+			note : el.querySelector('td:nth-Child(6) > input').value
+		});
+	});
+	
+	let r = await fetch('php/ajax/data.php', { 
+		method:'POST', 
+		body:JSON.stringify(payload),
+		headers: {
+			'Content-type':'application/json; charset=utf-8'
+		}
+	});
+	
+	let d = await r.json();
+	
+	if(d.success){
+		setSuccessMessage( "Saved" );
+		bUnsavedData = false;
+		getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
+	}else if(d.errors){
+		setErrorMessage( response.errors );
+	}
+});
+
+
 
 /*
 	The table will have a row for every date between fromDate and toDate, regardless of whether "data" has an object for that row.
@@ -90,8 +70,10 @@ function buildTable( data ){
 	var tbody = document.querySelector('#tblData tbody');
 	tbody.innerHTML = "";
 	
-	var fromDate = document.getElementById('inpFromDate').valueAsDate;
-	var toDate = document.getElementById('inpToDate').valueAsDate;
+	let fromDate = document.getElementById('inpFromDate').valueAsDate;
+	let toDate = document.getElementById('inpToDate').valueAsDate;
+	
+	const ONE_DAY = (86400 * 1000); //in milliseconds
 	
 	var getImageButton = function( image_exists ){
 		if(!image_exists || image_exists === null){
@@ -104,53 +86,60 @@ function buildTable( data ){
 	}
 	
 	var getImageHandler = function( date, image_exists ){
-		if(!image_exists || image_exists === null || image_exists === '0'){
+		if(!image_exists || image_exists === null){
+			return '';
+		} else if(image_exists === '0'){
 			return 'uploadImage(\''+ date +'\')';
 		} else {
 			return 'viewImage(\''+ date +'\')';
 		}
 	}
 	
-	for( var date = fromDate; date.getTime() <= toDate.getTime(); date.setTime(date.getTime() + (86400 * 1000))){
+	for( var date = fromDate; date.getTime() <= toDate.getTime(); date.setTime(date.getTime() + ONE_DAY) ){
 		
-		var row = data.find(function(r){
-			return r.date === date.toISOString().substring(0, 10);
+		let day = date.toISOString().substring(0, 10);
+		
+		let row = data.find( r => {
+			return r.date === day;
 		});
 		
-		//no row yet for this date, make an object for it
+		let tr = "";
+		
+		tr += `<tr>
+					<td class="date-col${((date.getDay() == 6 || date.getDay() == 0) ? ' bg-secondary" ' : '" ')}
+						data-date="${day}">${date.toLocaleDateString()}</td>`
 		if( ! row ){
-			row = {
-				kilograms:null,
-				last_week_average:null,
-				pounds:null,
-				stone:null,
-				note:null,
-				image_exists:null
-			}
+			tr += `
+					<td class="num-col-small"><input class="form-control" type="number" step=".1" value=""/></td>
+					<td class="num-col-small"></td>
+					<td class="num-col-small"></td>
+					<td class="num-col-small"></td>
+					<td class="text-col-wide"><input class="form-control" type="text" value=""/></td>
+					<td class="button-col-small">${getImageButton(null)}</td>`
+		} else {
+			tr += `
+					<td class="num-col-small"><input class="form-control" type="number" step=".1" value="${Number(row.kilograms).toFixed(1)}"/></td>
+					<td class="num-col-small">${Number(row.last_week_average).toFixed(2)}</td>
+					<td class="num-col-small">${Number(row.pounds).toFixed(2)}</td>
+					<td class="num-col-small">${row.stone}</td>
+					<td class="text-col-wide"><input class="form-control" type="text" value="${row.note == null ? '' : row.note}"/></td>
+					<td class="button-col-small" onclick="${getImageHandler(day, row.image_exists)}">${getImageButton(row.image_exists)}</td>`
 		}
 		
-		tbody.innerHTML += 
-			'<tr>' +
-				'<td class="date-col' + ((date.getDay() == 6 || date.getDay() == 0) ? ' bg-secondary" ' : '" ') + 
-					'data-date="'+ (date.toISOString().substring(0, 10)) + '">'+ date.toLocaleDateString() + '</td>' +
-				'<td class="num-col-small"><input class="form-control" type="number" step=".1" value="'+ (row.kilograms ? Number(row.kilograms).toFixed(1) : '') +'"/></td>' +
-				'<td class="num-col-small">'+ (row.last_week_average ? Number(row.last_week_average).toFixed(2) : '') + '</td>' +
-				'<td class="num-col-small">'+ (row.pounds ? Number(row.pounds).toFixed(2) : '') + '</td>' +
-				'<td class="num-col-small">'+ (row.stone ? row.stone : '') + '</td>' +
-				'<td class="text-col-wide"><input class="form-control" type="text" value="'+ (row.note == null ? '' : row.note) + '" /></td>' +
-				'<td class="button-col-small" onclick="'+ getImageHandler((date.toISOString().substring(0, 10)), row.image_exists) +'">'+ getImageButton(row.image_exists) +'</td>'
-			'</tr>';
+		tr += `</tr>`
+		
+		tbody.innerHTML += tr;
 	}
 	
-	document.querySelectorAll('#tblData input').forEach(function( input ){
-		input.addEventListener('change', function( evt ){
-			evt.target.parentElement.parentElement.classList.add('table-warning');
+	document.querySelectorAll('#tblData input').forEach( el => {
+		el.addEventListener('change', e => {
+			e.target.parentElement.parentElement.classList.add('table-warning');
 			bUnsavedData = true;
 		});
 	});
 	
 	
-	var scrl = document.getElementById('scrAllTable');
+	let scrl = document.getElementById('scrAllTable');
 	scrl.scrollTop = scrl.scrollHeight;
 }
 
@@ -168,24 +157,21 @@ function viewImage(date){
 /*
 	Setup the functionality of the delete button on the image viewing dialog
 */
-document.getElementById('btnImageViewDelete').addEventListener('click', function(evt){
+document.getElementById('btnImageViewDelete').addEventListener('click', async evt => {
 	evt.preventDefault();
 	
-	var date = document.querySelector('#imageViewPanel h3').getAttribute('data-date');
-	
-	var xhr = new XMLHttpRequest();
-		
-	xhr.addEventListener('load', function( evt ){
-		document.getElementById('btnImageViewClose').click();
-		getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
-	});
-	
-	var fd = new FormData();
+	let date = document.querySelector('#imageViewPanel h3').getAttribute('data-date');
+	let fd = new FormData();
 	fd.append('date', date);
 	fd.append('delete', 'true');
 	
-	xhr.open('POST', 'php/ajax/image.php');
-	xhr.send( fd );
+	let r = await fetch('php/ajax/image.php', {
+		method:'POST',
+		body:fd
+	});
+	
+	document.getElementById('btnImageViewClose').click();
+	getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
 });
 
 /*
@@ -203,41 +189,39 @@ function uploadImage(date){
 /*
 	setup the functionality of the save button on the image upload dialog
 */
-document.getElementById('btnImageUploadSave').addEventListener('click', function( evt ){
+document.getElementById('btnImageUploadSave').addEventListener('click', async evt => {
 	evt.preventDefault();
 	
-	var date = document.querySelector('#imageUploadPanel h3').getAttribute('data-date');
+	let date = document.querySelector('#imageUploadPanel h3').getAttribute('data-date');
 	
-	var msgErrors = document.getElementById('msgImageUploadError');
+	let msgErrors = document.getElementById('msgImageUploadError');
 	msgErrors.innerHTML = '';
 	
-	var xhr = new XMLHttpRequest();
-	
-	xhr.addEventListener('load', function( evt ){
-		var response = JSON.parse( evt.target.response );
-		if( response.success ){
-			document.getElementById('btnImageUploadClose').click();
-			getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
-		} else {
-			for(var err in response.errors){
-				msgErrors.innerHTML += response.errors[err] + '</br>';
-			}
-		}
-		
-	});
-	
-	var fd = new FormData( document.getElementById( 'frmImageUpload' ) );
+	let fd = new FormData( document.getElementById( 'frmImageUpload' ) );
 	fd.append('date', date);
 	
-	xhr.open('POST', 'php/ajax/image.php');
-	xhr.send( fd );	
+	let r = await fetch('php/ajax/image.php', {
+		method:'POST',
+		body:fd
+	});
+	
+	let d = await r.json();
+	
+	if( d.success ){
+		document.getElementById('btnImageUploadClose').click();
+		getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
+	} else {
+		for(var err in d.errors){
+			msgErrors.innerHTML += d.errors[err] + '</br>';
+		}
+	}
 });
 
 
 /*
 	Fetch button event handler
 */
-document.getElementById('btnFetch').addEventListener('click', function( evt ){
+document.getElementById('btnFetch').addEventListener('click', evt => {
 	if( bUnsavedData ){
 		if(!confirm('There is unsaved data on the page, continue?')) {
 			return;
@@ -249,14 +233,7 @@ document.getElementById('btnFetch').addEventListener('click', function( evt ){
 	clearErrors();
 	
 	getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
-	
 });
-
-/*
-	Save button event handler
-*/
-document.getElementById('btnSave').addEventListener('click', saveData);
-
 
 /*
 	Export button handler
@@ -273,7 +250,7 @@ document.getElementById('btnExport').addEventListener('click', function(){
 /*
 	Window handler for unsaved data
 */
-window.addEventListener('beforeunload', function(e){
+window.addEventListener('beforeunload', e => {
 	if(bUnsavedData){
 		(e || window.event).returnValue = "There is unsaved data on the page";
 	}
@@ -283,15 +260,15 @@ window.addEventListener('beforeunload', function(e){
 /*
 	Add functionality for "scroll to top" and "scroll to bottom" TODO: might be useless?
 */
-(function(){
+(async () => {
 	var el = document.getElementById('scrollControls');
 	var tbl = document.getElementById('scrAllTable');
 	
-	el.firstElementChild.addEventListener('click', function(){
+	el.firstElementChild.addEventListener('click', () => {
 		tbl.scrollTop = 0;
 	});
 	
-	el.firstElementChild.nextElementSibling.addEventListener('click', function(){
+	el.firstElementChild.nextElementSibling.addEventListener('click', () => {
 		tbl.scrollTop = tbl.scrollHeight;
 	});
 	

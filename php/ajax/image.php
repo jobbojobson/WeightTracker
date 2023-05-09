@@ -11,12 +11,7 @@ switch($_SERVER['REQUEST_METHOD']){
 
 
 function get(){
-	
-	# get the row from the database
-	# look at the mime type of the row
-	# set the appropriate header
-	# send back the image data
-	
+
 	if(isset($_GET['date'])){
 		
 		
@@ -61,14 +56,11 @@ function post(){
 		try {
 			new Day($date);
 		} catch(Exception $e){
-			array_push($errors, 'Date is invalid');
-		}
-		
-		if(sizeof($errors) > 0){
-			echo json_encode([ 'errors' => $errors ]);
+			echo json_encode([ 'errors' => [ 'Date is invalid' ] ]);
 			exit();
 		}
 	} else {
+		echo json_encode([ 'errors' => [ 'Date is not set' ] ]);
 		exit();
 	}
 	
@@ -89,26 +81,28 @@ function post(){
 	} else if(isset($_FILES['image'])){
 		
 		$tmp = $_FILES['image']['tmp_name'];
-		if(!isset($tmp) || strlen($tmp) < 1){
+		
+		if(!isset($tmp) || strlen($tmp) < 1 || $_FILES['image']['error'] == 1){
+			# remember that upload_max_filesize = 2M in php.ini by default
+			echo json_encode([ 'errors' => [ 'Error uploading file' ] ]);
 			exit();
 		}
+		
 		$image_info = getimagesize($tmp);
 		
 		if( !  $image_info ){
-			array_push($errors, 'Supplied file is not an image file');
+			echo json_encode([ 'errors' => [ 'Supplied file is not an image file' ] ]);
+			exit();
 		}
 		
-		# TODO validate that it's a supported mime type
-		
-		if(sizeof($errors) > 0){
-			echo json_encode([ 'errors' => $errors ]);
+		if(!in_array($image_info['mime'], ['image/jpeg', 'image/png', 'image/bmp', 'image/tiff', 'image/gif'])){
+			echo json_encode([ 'errors' => [ 'Unsupported image type' ] ]);
 			exit();
 		}
 		
 		require(__DIR__.'/../include/db/WeightDatabase.php');
 		
 		try {
-			
 			(new WeightDatabase())->setImage( $date, file_get_contents($tmp), $image_info['mime'] );
 			
 			echo json_encode([ 'success' => true ]);
@@ -118,7 +112,6 @@ function post(){
 		}
 		
 	}
-	
 }
 
 

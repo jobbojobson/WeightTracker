@@ -65,8 +65,6 @@ document.getElementById('btnSave').addEventListener('click', async e => {
 */
 function buildTable( data ){
 	
-	//var tbody = document.querySelector('#tblData tbody');
-	//tbody.innerHTML = "";
 	var table = document.querySelector('#tblData');
 	table.removeChild(table.querySelector('tbody'));
 	
@@ -106,9 +104,9 @@ function buildTable( data ){
 			return r.date === day;
 		});
 		
-		let tr = "";
+		row = JSON.parse(JSON.stringify(row));
 		
-		tr += `<tr>
+		let tr = `<tr>
 					<td class="date-col${((date.getDay() == 6 || date.getDay() == 0) ? ' bg-secondary" ' : '" ')}
 						data-date="${day}">${date.toLocaleDateString()}</td>`
 		if( ! row ){

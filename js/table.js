@@ -54,7 +54,7 @@ document.getElementById('btnSave').addEventListener('click', async e => {
 		bUnsavedData = false;
 		getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
 	}else if(d.errors){
-		setErrorMessage( response.errors );
+		setErrorMessage( d.errors );
 	}
 });
 
@@ -65,8 +65,10 @@ document.getElementById('btnSave').addEventListener('click', async e => {
 */
 function buildTable( data ){
 	
-	var tbody = document.querySelector('#tblData tbody');
-	tbody.innerHTML = "";
+	//var tbody = document.querySelector('#tblData tbody');
+	//tbody.innerHTML = "";
+	var table = document.querySelector('#tblData');
+	table.removeChild(table.querySelector('tbody'));
 	
 	let fromDate = document.getElementById('inpFromDate').valueAsDate;
 	let toDate = document.getElementById('inpToDate').valueAsDate;
@@ -93,6 +95,9 @@ function buildTable( data ){
 		}
 	}
 	
+	var dom = new DOMParser();
+	var tbody = '<table><tbody>';
+	
 	for( var date = fromDate; date.getTime() <= toDate.getTime(); date.setTime(date.getTime() + ONE_DAY) ){
 		
 		let day = date.toISOString().substring(0, 10);
@@ -113,8 +118,9 @@ function buildTable( data ){
 					<td class="num-col-small"></td>
 					<td class="num-col-small"></td>
 					<td class="text-col-wide"><input class="form-control" type="text" value=""/></td>
-					<td class="button-col-small">${getImageButton(null)}</td>`
+					<td class="button-col-small"></td>`
 		} else {
+			
 			tr += `
 					<td class="num-col-small"><input class="form-control" type="number" step=".1" value="${Number(row.kilograms).toFixed(1)}"/></td>
 					<td class="num-col-small">${Number(row.last_week_average).toFixed(2)}</td>
@@ -126,8 +132,12 @@ function buildTable( data ){
 		
 		tr += `</tr>`
 		
-		tbody.innerHTML += tr;
+		tbody += tr;
 	}
+	
+	tbody += '</tbody></table>';
+	
+	table.appendChild(document.createRange().createContextualFragment(tbody).querySelector('tbody'));
 	
 	document.querySelectorAll('#tblData input').forEach( el => {
 		el.addEventListener('change', e => {
@@ -135,7 +145,6 @@ function buildTable( data ){
 			bUnsavedData = true;
 		});
 	});
-	
 	
 	let scrl = document.getElementById('scrAllTable');
 	scrl.scrollTop = scrl.scrollHeight;
@@ -213,7 +222,7 @@ document.getElementById('btnImageUploadSave').addEventListener('click', async ev
 		for(var err in d.errors){
 			e += d.errors[err] + '</br>';
 		}
-		msgErrors.innerHTML = e;
+		msgErrors.appendChild(htmlDecode(e));
 	}
 });
 
@@ -273,6 +282,14 @@ window.addEventListener('beforeunload', e => {
 	});
 	
 })();
+
+/*
+	decode the given HTML string using DOMParser (XSS protection)
+*/
+function htmlDecode(s){
+	let doc = new DOMParser().parseFromString(s, "text/html");
+	return doc.documentElement.textContent;
+}
 
 /*
 	move "from date" 28 days in the past

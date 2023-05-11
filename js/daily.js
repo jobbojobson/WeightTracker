@@ -11,8 +11,11 @@ let bUnsavedData = false;
 	let d = await r.json();
 	
 	if(d.data && d.data.length > 0){
+		let doc = new DOMParser().parseFromString(d.data[0].note, "text/html");
+		let note = doc.documentElement.textContent;
+		
 		document.getElementById('inpDayValue').value = Number(d.data[0].kilograms).toFixed(1);
-		document.getElementById('inpDayNote').value = decodeHtml(d.data[0].note);
+		document.getElementById('inpDayNote').value = note;
 	}
 	
 	document.getElementById('btnSave').disabled = false;
@@ -46,7 +49,7 @@ document.getElementById('btnSave').addEventListener('click', async evt => {
 		bUnsavedData = false;
 		getSummary();
 	} else if (d.errors) {
-		setErrorMessage( response.errors );
+		setErrorMessage( d.errors );
 	}
 	
 	document.getElementById('btnSave').disabled = false;
@@ -72,7 +75,9 @@ Pull the summary data
 */
 async function getSummary() {
 	let r = await fetch('php/ajax/summary.php');
-	document.getElementById('summary').innerHTML = await r.text();
+	let html = await r.text();
+	let doc = new DOMParser().parseFromString(html, "text/html");
+	document.getElementById('summary').appendChild(doc.documentElement);
 }
 
 getSummary();

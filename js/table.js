@@ -44,9 +44,7 @@ document.getElementById('btnSave').addEventListener('click', async e => {
 	let r = await fetch('php/ajax/data.php', { 
 		method:'POST', 
 		body:JSON.stringify(payload),
-		headers: {
-			'Content-type':'application/json; charset=utf-8'
-		}
+		headers: { 'Content-type':'application/json; charset=utf-8' }
 	});
 	
 	let d = await r.json();
@@ -79,9 +77,9 @@ function buildTable( data ){
 		if(!image_exists || image_exists === null){
 			return '';
 		} else if( image_exists === '0' ){
-			return '<i class="bi bi-plus"></i>';
+			return `<i class="bi bi-plus"></i>`;
 		} else if( image_exists === '1' ) {
-			return '<i class="bi bi-image"></i>';
+			return `<i class="bi bi-image"></i>`;
 		}
 	}
 	
@@ -89,9 +87,9 @@ function buildTable( data ){
 		if(!image_exists || image_exists === null){
 			return '';
 		} else if(image_exists === '0'){
-			return 'uploadImage(\''+ date +'\')';
+			return `uploadImage('${date}')`;
 		} else {
-			return 'viewImage(\''+ date +'\')';
+			return `viewImage('${date}')`;
 		}
 	}
 	
@@ -211,9 +209,11 @@ document.getElementById('btnImageUploadSave').addEventListener('click', async ev
 		document.getElementById('btnImageUploadClose').click();
 		getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
 	} else {
+		var e = '';
 		for(var err in d.errors){
-			msgErrors.innerHTML += d.errors[err] + '</br>';
+			e += d.errors[err] + '</br>';
 		}
+		msgErrors.innerHTML = e;
 	}
 });
 

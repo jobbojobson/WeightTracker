@@ -77,7 +77,9 @@ async function getSummary() {
 	let r = await fetch('php/ajax/summary.php');
 	let html = await r.text();
 	let doc = new DOMParser().parseFromString(html, "text/html");
-	document.getElementById('summary').appendChild(doc.documentElement);
+	let el = document.getElementById('summary');
+	el.innerHTML = "";
+	el.appendChild(doc.documentElement);
 }
 
 getSummary();

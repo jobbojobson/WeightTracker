@@ -5,40 +5,28 @@ google.charts.setOnLoadCallback(updateChartData);
 
 var data;
 
-function updateChartData( ){
+async function updateChartData(){
+	let fromDate = document.getElementById('inpFromDate').value;
+	let toDate = document.getElementById('inpToDate').value;
 	
-	var xhr = new XMLHttpRequest();
+	let r = await fetch( 'php/ajax/data.php?fromDate=' + encodeURIComponent(fromDate) + '&toDate=' + encodeURIComponent(toDate) );
+	let d = await r.json();
 	
-	var fromDate = document.getElementById('inpFromDate').value;
-	var toDate = document.getElementById('inpToDate').value;
+	if( ! d.success ) return;
 	
-	xhr.addEventListener('load', function( evt ){
-		var response = JSON.parse( evt.target.response );
-		
-		if( ! response.success ) return;
-		
-		var chartData = new google.visualization.DataTable();
-		chartData.addColumn('date', 'Date');
-		chartData.addColumn('number', '7 Day Rolling Average');
-		chartData.addRows( prepareData(response.data) );
-		
-		data = chartData;
-		drawChart();
+	var c = [];
+	
+	d.data.forEach( r => {
+		c.push([ new Date(r.date), Number(r.last_week_average) ]);
 	});
 	
-	xhr.open('GET', 'php/ajax/data.php?fromDate=' + encodeURIComponent(fromDate) + '&toDate=' + encodeURIComponent(toDate) );
-	xhr.send();
-}
-
-function prepareData( data ){
+	let dt = new google.visualization.DataTable();
+	dt.addColumn('date', 'Date');
+	dt.addColumn('number', '7 Day Rolling Average');
+	dt.addRows( c );
 	
-	var chartData = [];
-	
-	for( var i = 0; i < data.length; i++ ){
-		chartData.push([ new Date(data[i].date), Number(data[i].last_week_average) ]);
-	}
-	
-	return chartData;
+	data = dt;
+	drawChart();
 }
 
 function drawChart( ){
@@ -56,7 +44,6 @@ function drawChart( ){
 		legend: { 
 			position:'none'
 		},
-		
 		
 		trendlines: {
 			0: {
@@ -101,18 +88,10 @@ function drawChart( ){
 /*
 	move "from date" 90 days in the past
 */
-var fromDate = document.getElementById('inpFromDate');
-fromDate.value = (new Date(fromDate.valueAsDate.getTime() - (90 * 24 * 60 * 60 * 1000)).toISOString().substr(0, 10));
-var toDate = document.getElementById('inpToDate');
+document.getElementById('inpFromDate').value = 
+	(new Date(document.getElementById('inpFromDate').valueAsDate.getTime() - (90 * 24 * 60 * 60 * 1000)).toISOString().substr(0, 10));
+
 
 document.getElementById('btnFetch').addEventListener('click', updateChartData);
 
 window.addEventListener("resize", drawChart);
-
-
-
-
-
-
-
-

@@ -48,9 +48,9 @@ function get(){
 				createCSV( $data );
 			} else {
 				
-				array_walk_recursive($data, function(&$value, $key){
+				/*array_walk_recursive($data, function(&$value, $key){
 					$value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
-				});
+				});*/
 				
 				echo json_encode([ 'success' => true, 'data' => $data ]);
 			}

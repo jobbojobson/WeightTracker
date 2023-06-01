@@ -11,11 +11,8 @@ let bUnsavedData = false;
 	let d = await r.json();
 	
 	if(d.data && d.data.length > 0){
-		let doc = new DOMParser().parseFromString(d.data[0].note, "text/html");
-		let note = doc.documentElement.textContent;
-		
-		document.getElementById('inpDayValue').value = Number(d.data[0].kilograms).toFixed(1);
-		document.getElementById('inpDayNote').value = note;
+		document.getElementById('inpDayValue').setAttribute('value', Number(d.data[0].kilograms).toFixed(1));
+		document.getElementById('inpDayNote').setAttribute('value', d.data[0].note ? d.data[0].note : '');
 	}
 	
 	document.getElementById('btnSave').disabled = false;

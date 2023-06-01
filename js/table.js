@@ -65,22 +65,62 @@ document.getElementById('btnSave').addEventListener('click', async e => {
 */
 function buildTable( data ){
 	
-	var table = document.querySelector('#tblData');
-	table.removeChild(table.querySelector('tbody'));
+	var tbody = document.querySelector('#tblData tbody');
+	tbody.innerHTML = '';
 	
 	let fromDate = document.getElementById('inpFromDate').valueAsDate;
 	let toDate = document.getElementById('inpToDate').valueAsDate;
 	
 	const ONE_DAY = (86400 * 1000); //in milliseconds
 	
+	for( var date = fromDate; date.getTime() <= toDate.getTime(); date.setTime(date.getTime() + ONE_DAY) ){
+		
+		let row = data.find( r => {
+			return r.date === date.toISOString().substring(0, 10);
+		});
+		
+		tbody.appendChild( getRowTag( row, date ) );
+	}
+	
+	document.querySelectorAll('#tblData input').forEach( el => {
+		el.addEventListener('change', e => {
+			e.target.parentElement.parentElement.classList.add('table-warning');
+			bUnsavedData = true;
+		});
+	});
+	
+	let scrl = document.getElementById('scrAllTable');
+	scrl.scrollTop = scrl.scrollHeight;
+}
+
+/*
+	Build a <tr> tag out of the given row object and date
+*/
+function getRowTag( r, d ){
+	var tr = document.createElement('tr');
+	
+	var getCell = function(cssClass, value){
+		var td = document.createElement('td');
+		td.setAttribute('class', cssClass);
+		
+		if( value ){
+			td.appendChild( value );
+		}
+		return td;
+	}
+
 	var getImageButton = function( image_exists ){
+		var el = document.createElement('i');
+		
 		if(!image_exists || image_exists === null){
 			return '';
 		} else if( image_exists === '0' ){
-			return `<i class="bi bi-plus"></i>`;
+			el.setAttribute('class', 'bi bi-plus');
 		} else if( image_exists === '1' ) {
-			return `<i class="bi bi-image"></i>`;
+			el.setAttribute('class', 'bi bi-image');
 		}
+		
+		return el;
 	}
 	
 	var getImageHandler = function( date, image_exists ){
@@ -93,59 +133,50 @@ function buildTable( data ){
 		}
 	}
 	
-	var dom = new DOMParser();
-	var tbody = '<table><tbody>';
+	let td = getCell((d.getDay() == 6 || d.getDay() == 0) ? 'bg-secondary' : '');
+	td.setAttribute('data-date', d.toISOString().substring(0, 10));
+	td.appendChild( document.createTextNode( d.toLocaleDateString() ) );
+	tr.appendChild(td);
 	
-	for( var date = fromDate; date.getTime() <= toDate.getTime(); date.setTime(date.getTime() + ONE_DAY) ){
+	var iNum = document.createElement('input');
+	iNum.setAttribute('class', 'form-control');
+	iNum.setAttribute('type', 'number');
+	iNum.setAttribute('step', '.1');
+	iNum.setAttribute('value', '');
+	
+	var iNote = document.createElement('input');
+	iNote.setAttribute('class', 'form-control');
+	iNote.setAttribute('type', 'text');
+	iNote.setAttribute('value', '');
+	
+	var tdImage;
+	
+	if( r ){
+		iNum.setAttribute('value', Number(r.kilograms).toFixed(1));
+		iNote.setAttribute('value', r.note == null ? '' : r.note);
+		tdImage = getCell('button-col-small', getImageButton(r.image_exists));
+		tdImage.setAttribute('onclick', getImageHandler(d, r.image_exists) );
 		
-		let day = date.toISOString().substring(0, 10);
-		
-		let row = data.find( r => {
-			return r.date === day;
-		});
-		
-		row = JSON.parse(JSON.stringify(row));
-		
-		let tr = `<tr>
-					<td class="date-col${((date.getDay() == 6 || date.getDay() == 0) ? ' bg-secondary" ' : '" ')}
-						data-date="${day}">${date.toLocaleDateString()}</td>`
-		if( ! row ){
-			tr += `
-					<td class="num-col-small"><input class="form-control" type="number" step=".1" value=""/></td>
-					<td class="num-col-small"></td>
-					<td class="num-col-small"></td>
-					<td class="num-col-small"></td>
-					<td class="text-col-wide"><input class="form-control" type="text" value=""/></td>
-					<td class="button-col-small"></td>`
-		} else {
-			
-			tr += `
-					<td class="num-col-small"><input class="form-control" type="number" step=".1" value="${Number(row.kilograms).toFixed(1)}"/></td>
-					<td class="num-col-small">${Number(row.last_week_average).toFixed(2)}</td>
-					<td class="num-col-small">${Number(row.pounds).toFixed(2)}</td>
-					<td class="num-col-small">${row.stone}</td>
-					<td class="text-col-wide"><input class="form-control" type="text" value="${row.note == null ? '' : row.note}"/></td>
-					<td class="button-col-small" onclick="${getImageHandler(day, row.image_exists)}">${getImageButton(row.image_exists)}</td>`
-		}
-		
-		tr += `</tr>`
-		
-		tbody += tr;
+	} else {
+		tdImage = getCell('button-col-small');
 	}
 	
-	tbody += '</tbody></table>';
+	tr.appendChild( getCell( 'num-col-small', iNum ) );
 	
-	table.appendChild(document.createRange().createContextualFragment(tbody).querySelector('tbody'));
+	if( r ){
+		tr.appendChild( getCell( 'num-col-small', document.createTextNode(Number(r.last_week_average).toFixed(2) ) ) );
+		tr.appendChild( getCell( 'num-col-small', document.createTextNode(Number(r.pounds).toFixed(2) ) ) );
+		tr.appendChild( getCell( 'num-col-small', document.createTextNode(r.stone) ) );
+	} else {
+		tr.appendChild( getCell('num-col-small') );
+		tr.appendChild( getCell('num-col-small') );
+		tr.appendChild( getCell('num-col-small') );
+	}
 	
-	document.querySelectorAll('#tblData input').forEach( el => {
-		el.addEventListener('change', e => {
-			e.target.parentElement.parentElement.classList.add('table-warning');
-			bUnsavedData = true;
-		});
-	});
-	
-	let scrl = document.getElementById('scrAllTable');
-	scrl.scrollTop = scrl.scrollHeight;
+	tr.appendChild( getCell('text-col-wide', iNote) );
+	tr.appendChild( tdImage );
+		
+	return tr;
 }
 
 /*

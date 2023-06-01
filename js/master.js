@@ -11,11 +11,14 @@ function setSuccessMessage( msg ){
 }
 
 /* parameter here is an array */
-function setErrorMessage( errors ){
-	var msgError = document.getElementById('msgError');
+function setErrorMessage( errors, errorPanel ){
+	//'msgError'
+	var msgError = document.getElementById(errorPanel);
+	msgError.innerHTML = '';
 	
 	for(var err in errors){
-		msgError.innerHTML += errors[err] + "</br>";
+		msgError.appendChild( document.createTextNode( errors[err] ) );
+		msgError.appendChild( document.createElement('br') );
 	}
 }
 

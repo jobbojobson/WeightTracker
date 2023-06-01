@@ -19,7 +19,7 @@ async function getData( from, to ){
 	if(d.success){
 		buildTable(d.data);
 	} else if(d.errors) {
-		setErrorMessage(d.errors);
+		setErrorMessage(d.errors, 'msgError');
 	}
 }
 
@@ -54,7 +54,7 @@ document.getElementById('btnSave').addEventListener('click', async e => {
 		bUnsavedData = false;
 		getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
 	}else if(d.errors){
-		setErrorMessage( d.errors );
+		setErrorMessage( d.errors, 'msgError' );
 	}
 });
 
@@ -217,9 +217,6 @@ document.getElementById('btnImageUploadSave').addEventListener('click', async ev
 	
 	let date = document.querySelector('#imageUploadPanel h3').getAttribute('data-date');
 	
-	let msgErrors = document.getElementById('msgImageUploadError');
-	msgErrors.innerHTML = '';
-	
 	let fd = new FormData( document.getElementById( 'frmImageUpload' ) );
 	fd.append('date', date);
 	
@@ -234,10 +231,7 @@ document.getElementById('btnImageUploadSave').addEventListener('click', async ev
 		document.getElementById('btnImageUploadClose').click();
 		getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
 	} else {
-		for(var err in d.errors){
-			msgErrors.appendChild( document.createTextNode( d.errors[err] ) );
-			msgErrors.appendChild( document.createElement('br') );
-		}
+		setErrorMessage( d.errors, 'msgImageUploadError' );
 	}
 });
 

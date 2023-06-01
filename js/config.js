@@ -18,7 +18,7 @@ document.getElementById('btnSave').addEventListener('click', async evt => {
 		setSuccessMessage( 'Saved' );
 		bUnsavedData = false;
 	} else {
-		setErrorMessage( d.errors );
+		setErrorMessage( d.errors, 'msgError' );
 	}
 });
 

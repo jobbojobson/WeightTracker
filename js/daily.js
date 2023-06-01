@@ -46,7 +46,7 @@ document.getElementById('btnSave').addEventListener('click', async evt => {
 		bUnsavedData = false;
 		getSummary();
 	} else if (d.errors) {
-		setErrorMessage( d.errors );
+		setErrorMessage( d.errors, 'msgError' );
 	}
 	
 	document.getElementById('btnSave').disabled = false;

@@ -111,26 +111,12 @@ function getRowTag( r, d ){
 
 	var getImageButton = function( image_exists ){
 		var el = document.createElement('i');
-		
-		if(!image_exists || image_exists === null){
-			return '';
-		} else if( image_exists === '0' ){
-			el.setAttribute('class', 'bi bi-plus');
-		} else if( image_exists === '1' ) {
-			el.setAttribute('class', 'bi bi-image');
-		}
-		
+		el.setAttribute('class', image_exists === 1 ? 'bi bi-image' : 'bi bi-plus');
 		return el;
 	}
 	
 	var getImageHandler = function( date, image_exists ){
-		if(!image_exists || image_exists === null){
-			return '';
-		} else if(image_exists === '0'){
-			return `uploadImage('${date}')`;
-		} else {
-			return `viewImage('${date}')`;
-		}
+		return image_exists === 1 ? `viewImage('${date}')` : `uploadImage('${date}')`;
 	}
 	
 	let td = getCell((d.getDay() == 6 || d.getDay() == 0) ? 'bg-secondary' : '');
@@ -155,7 +141,7 @@ function getRowTag( r, d ){
 		iNum.setAttribute('value', Number(r.kilograms).toFixed(1));
 		iNote.setAttribute('value', r.note == null ? '' : r.note);
 		tdImage = getCell('button-col-small', getImageButton(r.image_exists));
-		tdImage.setAttribute('onclick', getImageHandler(d, r.image_exists) );
+		tdImage.setAttribute('onclick', getImageHandler(d.toISOString().substring(0, 10), r.image_exists) );
 		
 	} else {
 		tdImage = getCell('button-col-small');
@@ -181,6 +167,7 @@ function getRowTag( r, d ){
 
 /*
 	Setup the content of the image viewing dialog
+	date - an ISO8601 date string
 */
 function viewImage(date){
 	document.querySelector('#imageViewPanel img').setAttribute('src', 'php/ajax/image.php?date=' + encodeURIComponent(date));
@@ -293,7 +280,6 @@ window.addEventListener('beforeunload', e => {
 		(e || window.event).returnValue = "There is unsaved data on the page";
 	}
 });
-
 
 /*
 	Add functionality for "scroll to top" and "scroll to bottom" TODO: might be useless?

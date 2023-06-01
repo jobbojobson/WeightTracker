@@ -234,11 +234,10 @@ document.getElementById('btnImageUploadSave').addEventListener('click', async ev
 		document.getElementById('btnImageUploadClose').click();
 		getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
 	} else {
-		var e = '';
 		for(var err in d.errors){
-			e += d.errors[err] + '</br>';
+			msgErrors.appendChild( document.createTextNode( d.errors[err] ) );
+			msgErrors.appendChild( document.createElement('br') );
 		}
-		msgErrors.appendChild(htmlDecode(e));
 	}
 });
 

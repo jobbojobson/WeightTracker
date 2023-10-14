@@ -15,7 +15,7 @@ class MariaDBWeightDAO extends DataAccessObject {
 			It's something to do with pdo_mysql vs pdo_mysqlnd that I don't understand.
 			This class will just cast such strings to appropriate types 
 		*/
-		$this->dbo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+		//$this->dbo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 	}
 	
 	public function setData($rows){
@@ -99,7 +99,7 @@ class MariaDBWeightDAO extends DataAccessObject {
 				'pounds' => (float)$row['pounds'],
 				'stone' => $row['stone'],
 				'note' => $row['note'],
-				'image_exists' => $row['image_exists']
+				'image_exists' => (int)$row['image_exists']
 			]);
 		}
 		$stmt->closeCursor();

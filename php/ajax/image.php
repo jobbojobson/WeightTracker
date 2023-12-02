@@ -55,7 +55,7 @@ function post(){
 		
 		try {
 			new Day($date);
-		} catch(Exception $e){
+		} catch(Exception){
 			echo json_encode([ 'errors' => [ 'Date is invalid' ] ]);
 			exit();
 		}
@@ -75,7 +75,7 @@ function post(){
 			echo json_encode([ 'success' => true ]);
 			
 		} catch(Exception $e){
-			echo json_encode(['errors' => [ $e->getMessage() ]]);
+			echo json_encode(['errors' => [ 'Error deleting image' ]]);
 		}
 		
 	} else if(isset($_FILES['image'])){
@@ -107,8 +107,8 @@ function post(){
 			
 			echo json_encode([ 'success' => true ]);
 			
-		} catch(Exception $e){
-			echo json_encode(['errors' => [ $e->getMessage() ]]);
+		} catch(Exception){
+			echo json_encode(['errors' => [ 'Error saving image' ]]);
 		}
 		
 	}

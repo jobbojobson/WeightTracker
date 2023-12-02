@@ -75,8 +75,8 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
 			
 			echo json_encode([ 'success' => true ]);
 			
-		} catch(PDOException $e){
-			echo json_encode(['errors' => [ $e->getMessage() ]]);
+		} catch(PDOException){
+			echo json_encode(['errors' => [ 'Error saving config' ]]);
 		}
 	}
 }

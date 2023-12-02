@@ -74,7 +74,7 @@ function post(){
 			
 			echo json_encode([ 'success' => true ]);
 			
-		} catch(Exception $e){
+		} catch(Exception){
 			echo json_encode(['errors' => [ 'Error deleting image' ]]);
 		}
 		

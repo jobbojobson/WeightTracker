@@ -60,6 +60,8 @@ class MariaDBWeightDAO extends DataAccessObject {
 						$this->setParamOrNull( $stmt, ':date', $row->date );
 						
 						$stmt->execute();
+					} else {
+						throw new PDOException("Kilograms is required");
 					}
 				}
 				

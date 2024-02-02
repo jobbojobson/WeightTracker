@@ -250,6 +250,9 @@ document.getElementById('btnFetch').addEventListener('click', evt => {
 	
 	clearErrors();
 	
+	sessionStorage.setItem('tableFromDate', document.getElementById('inpFromDate').value);
+	sessionStorage.setItem('tableToDate', document.getElementById('inpToDate').value);
+	
 	getData( document.getElementById('inpFromDate'), document.getElementById('inpToDate') );
 });
 
@@ -299,11 +302,21 @@ function htmlDecode(s){
 	return doc.documentElement.textContent;
 }
 
-/*
-	move "from date" 28 days in the past
-*/
+
 var fromDate = document.getElementById('inpFromDate');
-fromDate.value = (new Date(fromDate.valueAsDate.getTime() - (28 * 24 * 60 * 60 * 1000)).toISOString().substr(0, 10));
 var toDate = document.getElementById('inpToDate');
+
+if(sessionStorage.getItem('tableFromDate')){
+	fromDate.value = new Date(sessionStorage.getItem('tableFromDate')).toISOString().substr(0, 10);
+} else {	
+	/*
+		move "from date" 28 days in the past
+	*/
+	fromDate.value = (new Date(fromDate.valueAsDate.getTime() - (28 * 24 * 60 * 60 * 1000)).toISOString().substr(0, 10));
+}
+
+if(sessionStorage.getItem('tableToDate')){
+	toDate.value = new Date(sessionStorage.getItem('tableToDate')).toISOString().substr(0, 10);
+}
 
 getData( fromDate, toDate );

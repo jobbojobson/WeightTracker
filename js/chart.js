@@ -85,13 +85,29 @@ function drawChart( ){
 }
 
 
-/*
-	move "from date" 90 days in the past
-*/
-document.getElementById('inpFromDate').value = 
-	(new Date(document.getElementById('inpFromDate').valueAsDate.getTime() - (90 * 24 * 60 * 60 * 1000)).toISOString().substr(0, 10));
+var fromDate = document.getElementById('inpFromDate');
+var toDate = document.getElementById('inpToDate');
 
+if(sessionStorage.getItem('chartFromDate')){
+	fromDate.value = new Date(sessionStorage.getItem('chartFromDate')).toISOString().substr(0, 10);
+} else {
+	/*
+		move "from date" 90 days in the past
+	*/
+	fromDate.value = 
+		(new Date(fromDate.valueAsDate.getTime() - (90 * 24 * 60 * 60 * 1000)).toISOString().substr(0, 10));
+}
 
-document.getElementById('btnFetch').addEventListener('click', updateChartData);
+if(sessionStorage.getItem('chartToDate')){
+	toDate.value = new Date(sessionStorage.getItem('chartToDate')).toISOString().substr(0, 10);
+}
+
+document.getElementById('btnFetch').addEventListener('click', () => {
+	
+	sessionStorage.setItem('chartFromDate', document.getElementById('inpFromDate').value);
+	sessionStorage.setItem('chartToDate', document.getElementById('inpToDate').value);
+	
+	updateChartData();
+});
 
 window.addEventListener("resize", drawChart);

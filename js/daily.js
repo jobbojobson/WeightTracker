@@ -77,6 +77,24 @@ async function getSummary() {
 	let el = document.getElementById('summary');
 	el.innerHTML = "";
 	el.appendChild(doc.documentElement);
+	getSummaryTrend();
+}
+
+async function getSummaryTrend(){
+	console.log('inside');
+	var d = new Date(document.getElementById('spnDate').getAttribute('data-date'));
+	var y = new Date(d.getTime() - (86400 * 1000));
+	
+	let r = await fetch('php/ajax/data.php?fromDate=' + encodeURIComponent(y.toISOString().substr(0, 10)) + '&toDate=' + encodeURIComponent(d.toISOString().substr(0, 10)));
+	let j = await r.json();
+	
+	if(j.data.length === 2) {
+		if(j.data[0].last_week_average <= j.data[1].last_week_average){
+			document.getElementById("trend_flag").setAttribute('class', 'bi bi-graph-up-arrow');
+		} else {
+			document.getElementById("trend_flag").setAttribute('class', 'bi bi-graph-down-arrow');
+		}
+	}
 }
 
 getSummary();

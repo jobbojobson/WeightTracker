@@ -61,7 +61,7 @@ function getBMR($user, $currentWeight){
 				<td><?php echo getStones(getPounds($user['goal_kg'])) ?></td>
 			</tr>
 			<tr>
-				<td>Current Weight</td>
+				<td><i id="trend_flag" class="bi"></i> Current Weight</td>
 				<td><?php echo number_format(round($currentWeight, 1), 1) ?></td>
 				<td><?php echo number_format(round(getPounds($currentWeight), 2), 2) ?></td>
 				<td><?php echo getStones(getPounds($currentWeight)) ?></td>

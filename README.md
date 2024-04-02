@@ -13,7 +13,7 @@ The app makes use of Google Charts to present a line chart of data.
 
 It is vanilla Javascript and PHP throughout, with the only dependency being Bootstrap 5.3 and Google charts
 
-![image](https://user-images.githubusercontent.com/59516714/233742319-08e6b47c-5a6e-4055-9dc6-a56e70c33e86.png)
+![Screenshot 2024-04-02 205800](https://github.com/jobbojobson/WeightTracker/assets/59516714/c2bc1522-96be-4c01-89c2-95064268a169)
 
 ![image](https://user-images.githubusercontent.com/59516714/233742986-702eff70-8f1a-4d97-b638-4c6efbf3d853.png)
 

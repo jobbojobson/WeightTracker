@@ -81,7 +81,7 @@ async function getSummary() {
 }
 
 async function getSummaryTrend(){
-	console.log('inside');
+	
 	var d = new Date(document.getElementById('spnDate').getAttribute('data-date'));
 	var y = new Date(d.getTime() - (86400 * 1000));
 	

@@ -43,59 +43,55 @@ function getBMR($user, $currentWeight){
 
 ?>
 
-<div class="table-responsive mb-2">
-	<table class="table table-sm align-middle table-bordered table-summary">
-		<thead class="table-dark">
-			<tr>
-				<th></th>
-				<th class="num-col-small">KG</th>
-				<th class="num-col-small">Pounds</th>
-				<th class="num-col-small">Stone</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>Target Weight</td>
-				<td><?php echo number_format(round($user['goal_kg'], 1), 1) ?></td>
-				<td><?php echo number_format(round(getPounds($user['goal_kg']), 2), 2) ?></td>
-				<td><?php echo getStones(getPounds($user['goal_kg'])) ?></td>
-			</tr>
-			<tr>
-				<td><i id="trend_flag" class="bi"></i> Current Weight</td>
-				<td><?php echo number_format(round($currentWeight, 1), 1) ?></td>
-				<td><?php echo number_format(round(getPounds($currentWeight), 2), 2) ?></td>
-				<td><?php echo getStones(getPounds($currentWeight)) ?></td>
-			</tr>
-			<tr>
-				<td>Lost</td>
-				<td><?php echo number_format(round($maxWeight - $currentWeight, 1), 1) ?></td>
-				<td><?php echo number_format(round(getPounds($maxWeight) - getPounds($currentWeight), 2), 2) ?></td>
-				<td><?php echo getStones(getPounds($maxWeight) - getPounds($currentWeight)) ?></td>
-			</tr>
-			<tr>
-				<td>Remaining</td>
-				<td><?php echo number_format(round($currentWeight - $user['goal_kg'], 1), 1) ?></td>
-				<td><?php echo number_format(round(getPounds($currentWeight) - getPounds($user['goal_kg']), 2), 2) ?></td>
-				<td><?php echo getStones(getPounds($currentWeight) - getPounds($user['goal_kg'])) ?></td>
-			</tr>
-		</tbody>
-	</table>
+<div class="infoPebble multipleUnits">
+	<p class="pebbleTitle">Target Weight</p>
+	<div>
+		<p class="pebbleData pebbleDataSelected"><?php echo number_format(round($user['goal_kg'], 1), 1) ?> kg</p>
+		<p class="pebbleData"><?php echo number_format(round(getPounds($user['goal_kg']), 2), 2) ?> lbs</p>
+		<p class="pebbleData"><?php echo getStones(getPounds($user['goal_kg'])) ?> st.</p>
+	</div>
 </div>
-<div class="table-responsive">
-	<table class="table table-sm align-middle table-bordered">
-		<thead class="table-dark">
-			<tr>
-				<th>Current BMI</th>
-				<th>Current BMR</th>
-				<th>BMR Minus Deficit</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td><?php echo getBMI($user, $currentWeight) ?></td>
-				<td><?php $bmr = getBMR($user, $currentWeight); echo number_format(round($bmr, 2), 0); ?></td>
-				<td><?php echo number_format(round($bmr - $user['deficit'], 2), 0); ?></td>
-			</tr>
-		</tbody>
-	</table>
+
+<div class="infoPebble multipleUnits">
+	<p class="pebbleTitle">Current Weight <i id="trend_flag" class="bi"></i></p>
+	<div>
+		<p class="pebbleData pebbleDataSelected"><?php echo number_format(round($currentWeight, 1), 1) ?> kg</p>
+		<p class="pebbleData"><?php echo number_format(round(getPounds($currentWeight), 2), 2) ?> lbs</p>
+		<p class="pebbleData"><?php echo getStones(getPounds($currentWeight)) ?> st.</p>
+	</div>
 </div>
+
+<div class="infoPebble multipleUnits">
+	<p class="pebbleTitle">Lost</p>
+	<div>
+		<p class="pebbleData pebbleDataSelected"><?php echo number_format(round($maxWeight - $currentWeight, 1), 1) ?> kg</p>
+		<p class="pebbleData"><?php echo number_format(round(getPounds($maxWeight) - getPounds($currentWeight), 2), 2) ?> lbs</p>
+		<p class="pebbleData"><?php echo getStones(getPounds($maxWeight) - getPounds($currentWeight)) ?> st.</p>
+	</div>
+</div>
+
+<div class="infoPebble multipleUnits">
+	<p class="pebbleTitle">Remaining</p>
+	<div>
+		<p class="pebbleData pebbleDataSelected"><?php echo number_format(round($currentWeight - $user['goal_kg'], 1), 1) ?> kg</p>
+		<p class="pebbleData"><?php echo number_format(round(getPounds($currentWeight) - getPounds($user['goal_kg']), 2), 2) ?> lbs</p>
+		<p class="pebbleData"><?php echo getStones(getPounds($currentWeight) - getPounds($user['goal_kg'])) ?> st.</p>
+	</div>
+</div>
+
+<div class="infoPebble">
+	<p class="pebbleTitle">Current BMI</p>
+	<p class="pebbleData pebbleDataSelected"><?php echo getBMI($user, $currentWeight) ?></p>
+</div>
+
+<div class="infoPebble">
+	<p class="pebbleTitle">Current BMR</p>
+	<p class="pebbleData pebbleDataSelected"><?php $bmr = getBMR($user, $currentWeight); echo number_format(round($bmr, 2), 0); ?></p>
+</div>
+
+<div class="infoPebble">
+	<p class="pebbleTitle">BMR minus deficit</p>
+	<p class="pebbleData pebbleDataSelected"><?php echo number_format(round($bmr - $user['deficit'], 2), 0); ?></p>
+</div>
+
+

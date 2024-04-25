@@ -67,6 +67,36 @@ window.addEventListener('beforeunload', e => {
 	}
 });
 
+function setSummaryHandlers(){
+	
+	var rotateUnits = function(){
+		document.querySelectorAll('.infoPebble.multipleUnits div').forEach( el => {
+			
+			//get the index of the current pebbleDataSelected
+			var pSelected = el.querySelector('.pebbleDataSelected');
+			var i = Array.from(el.children).indexOf(pSelected) + 1;
+			
+			el.querySelectorAll('p').forEach( p => { p.classList.remove('pebbleDataSelected'); });
+			switch(i){ 
+				case 1: //KG
+					el.querySelector('p:nth-child(2)').classList.add('pebbleDataSelected');
+					break;
+				case 2: //LBS
+					el.querySelector('p:nth-child(3)').classList.add('pebbleDataSelected');
+					break;
+				case 3: //St
+					el.querySelector('p:nth-child(1)').classList.add('pebbleDataSelected');
+					break;
+			}
+			
+		});
+	}
+	
+	document.querySelectorAll('.infoPebble.multipleUnits').forEach( el => {
+		el.addEventListener('click', rotateUnits);
+	});
+}
+
 /*
 Pull the summary data
 */
@@ -78,6 +108,7 @@ async function getSummary() {
 	el.innerHTML = "";
 	el.appendChild(doc.documentElement);
 	getSummaryTrend();
+	setSummaryHandlers();
 }
 
 async function getSummaryTrend(){

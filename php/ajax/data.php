@@ -34,7 +34,7 @@ function get(){
 		}
 		
 		if(sizeof($errors) > 0){
-			echo json_encode([ 'errors' => $errors ]);
+			echo json_encode([ 'errors' => [ 'Error parsing dates or making date period' ]]);
 			exit();
 		}
 		
